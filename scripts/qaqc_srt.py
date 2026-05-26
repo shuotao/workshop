@@ -19,10 +19,10 @@ qaqc_srt.py — SRT 的 QAQC 清理
   預設只用 dict/typo_dict.json。
 
 用法:
-    python3 SRT/qaqc_srt.py <in.srt>                           # in-place 清理
-    python3 SRT/qaqc_srt.py <in.srt> -o <out.srt>              # 寫到別處
-    python3 SRT/qaqc_srt.py <in.srt> --domain parenting
-    python3 SRT/qaqc_srt.py <in.srt> --structured              # 需要 GEMINI_API_KEY
+    python3 scripts/qaqc_srt.py <in.srt>                           # in-place 清理
+    python3 scripts/qaqc_srt.py <in.srt> -o <out.srt>              # 寫到別處
+    python3 scripts/qaqc_srt.py <in.srt> --domain parenting
+    python3 scripts/qaqc_srt.py <in.srt> --structured              # 需要 GEMINI_API_KEY
 """
 
 import sys

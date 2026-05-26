@@ -74,7 +74,7 @@ python3 scripts/session.py new <audio_file> --context "背景關鍵字"
 ### 工作坊產出 lint
 
 ```bash
-python3 scripts/workshop_lint.py            # 跑全部 W1-W6
+python3 scripts/workshop_lint.py            # 跑全部 W1-W5
 python3 scripts/workshop_lint.py --rule W1  # 只跑某條
 python3 scripts/workshop_lint.py --event <event-slug>  # 限定某場
 ```
@@ -88,8 +88,7 @@ python3 scripts/workshop_lint.py --event <event-slug>  # 限定某場
 | [`CLAUDE.md`](./CLAUDE.md) | 專案憲法,所有 AI 工具的唯一規範 |
 | [`docs/workshop-design-v4.md`](./docs/workshop-design-v4.md) | 兩小時工作坊定案 |
 | [`prompts/qaqc_core_rules.md`](./prompts/qaqc_core_rules.md) | Phase A/B、Step 3/4 規則(承襲 study) |
-| [`prompts/publish_qaqc.md`](./prompts/publish_qaqc.md) | Step 4.5/6 出版 QAQC(承襲 study,已移除根頁專屬規則) |
-| [`prompts/workshop_qaqc.md`](./prompts/workshop_qaqc.md) | W1-W6 WorkShop 專屬規範 + lint 操作指南 |
+| [`prompts/workshop_qaqc.md`](./prompts/workshop_qaqc.md) | W1-W5 WorkShop 專屬規範 + lint 操作指南 |
 
 ---
 

@@ -240,9 +240,8 @@ def main():
 
     # Auto-detect context.txt ONLY in the same directory as the input file.
     # This is intentional: context is session-scoped (lives in sessions/<id>/context.txt
-    # alongside the audio), never project-scoped. We deliberately do NOT fall back to
-    # SRT/context.txt or any other shared location — that past behavior caused cross-
-    # session contamination (see CLAUDE.md "Context 生命週期").
+    # alongside the audio), never project-scoped — past shared-location fallback caused
+    # cross-session contamination (see CLAUDE.md "Context 生命週期").
     if not context_prompt:
         candidate = os.path.join(os.path.dirname(input_file), "context.txt")
         if os.path.exists(candidate):

@@ -72,7 +72,7 @@ python3 scripts/session.py new "<media_file>" \
 1. 計算 session slug:`YYYY-MM-DD_<sanitized-filename>`,建立 `sessions/<slug>/`
 2. symlink 音檔為 `source.<ext>`,寫入 `context.txt`、`metadata.json` 骨架
 3. 呼叫 Groq Whisper → `transcript.srt`(時間軸保留、以 context.txt 作 prompt)
-4. 呼叫 `SRT/qaqc_srt.py --domain <name>` → Phase A(錯字、幻覺、亂碼過濾)
+4. 呼叫 `scripts/qaqc_srt.py --domain <name>` → Phase A(錯字、幻覺、亂碼過濾)
 5. (若未 `--stop-at` 早於 phase-b)呼叫 `scripts/qaqc_phase_b.py --mode merged` → `cleaned.md`
 6. (若 `--stop-at enhance|notes` 且有 keywords/enhance 旗標)→ `enhanced.md`
 7. (若 `--stop-at notes` 且有 `--identity`)→ `notes_<立場>.md`
@@ -150,7 +150,7 @@ python3 .claude/skills/good-student-notes/scripts/groq_transcribe.py \
   "<audio>" "<output_dir>" "<context_file>"
 
 # Step 2: Phase A 清理
-python3 SRT/qaqc_srt.py "<srt>" --domain <name> -o "<cleaned.srt>"
+python3 scripts/qaqc_srt.py "<srt>" --domain <name> -o "<cleaned.srt>"
 
 # Step 3: Phase B 校稿
 python3 scripts/qaqc_phase_b.py --mode merged --context "<ctx>" \

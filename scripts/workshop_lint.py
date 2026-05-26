@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """scripts/workshop_lint.py — WorkShop QAQC 自動審查
 
-依 `prompts/workshop_qaqc.md` 的 W1-W6 規則對 WorkShop 內容做機械檢查。
+依 `prompts/workshop_qaqc.md` 的 W1-W5 規則對 WorkShop 內容做機械檢查。
 本檔是「規範與實作的橋」,所有規則的權威 wording 都從 prompts/workshop_qaqc.md
 同步而來;若該檔更新,本檔的 wording 常數也要同步更新。
 
-初版實作:W1 / W2 / W3 / W6。
+初版實作:W1 / W2 / W3。
 未實作:W4 (報名表↔節目單時長) / W5 (Meta-Loop SLA) — 留待第一場實際舉辦時補,
 因為現在還沒有 sessions/<run>/registration-form.md 範本可比對。
+
+(W6 已移除:WorkShop 不做網頁出版,Meta-Loop 交付改為 markdown email,
+原 W6「出版產物承襲 study」規則整節退場。)
 
 用法:
     python3 scripts/workshop_lint.py                # 跑全部已實作的 W
@@ -20,7 +23,6 @@ Exit code:0 = 全綠,1 = 任何規則失敗,2 = 環境錯誤。
 
 import argparse
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -179,45 +181,6 @@ def check_w3(event_filter: str | None = None) -> list[tuple]:
     return results
 
 
-def check_w6(event_filter: str | None = None) -> list[tuple]:
-    """W6 出版承襲 study 規則(呼叫 publish_qaqc.py)"""
-    results = []
-    publish_dir = ROOT / "publish" / "goodedunote" / "public"
-
-    if not publish_dir.is_dir():
-        results.append(("W6", "publish/goodedunote/public 不存在", True,
-                       "預期之內(尚未出版任何 slug)"))
-        return results
-
-    data_js = publish_dir / "data.js"
-    if not data_js.is_file():
-        results.append(("W6", "data.js 不存在", True,
-                       "預期之內(尚未出版任何 slug)"))
-        return results
-
-    # 有 data.js 才呼叫 publish_qaqc.py
-    script = ROOT / "scripts" / "publish_qaqc.py"
-    if not script.is_file():
-        results.append(("W6", "publish_qaqc.py 不存在", False, str(script)))
-        return results
-
-    try:
-        cmd = ["python3", str(script), "--quiet"]
-        if event_filter:
-            cmd.extend(["--slug", event_filter])
-        proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(ROOT))
-        ok = proc.returncode == 0
-        detail = "all green" if ok else f"exit={proc.returncode},見上方 publish_qaqc 輸出"
-        if not ok:
-            # 把 publish_qaqc.py 的 stdout 印出來給 user 看
-            print(proc.stdout[-2000:])
-        results.append(("W6", "publish_qaqc.py audit", ok, detail))
-    except Exception as e:
-        results.append(("W6", "publish_qaqc.py 跑失敗", False, str(e)))
-
-    return results
-
-
 # ──────────────────────────────────────────────────────────────────
 # Main
 # ──────────────────────────────────────────────────────────────────
@@ -225,7 +188,6 @@ RULE_FUNCS = {
     "W1": check_w1,
     "W2": check_w2,
     "W3": check_w3,
-    "W6": check_w6,
 }
 UNIMPLEMENTED = {
     "W4": "報名表↔節目單時長對齊(留待第一場補,因為現在還沒 schedule.md 與 registration-form.md)",
@@ -235,7 +197,7 @@ UNIMPLEMENTED = {
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="WorkShop QAQC lint")
-    ap.add_argument("--rule", help="只跑某條規則,如 W1, W2, W3, W6")
+    ap.add_argument("--rule", help="只跑某條規則,如 W1, W2, W3")
     ap.add_argument("--event", help="限定 event slug")
     ap.add_argument("--quiet", action="store_true", help="只印失敗")
     args = ap.parse_args()

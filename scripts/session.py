@@ -36,7 +36,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SESSIONS_DIR = PROJECT_ROOT / "sessions"
 GROQ_SCRIPT = PROJECT_ROOT / ".claude/skills/good-student-notes/scripts/groq_transcribe.py"
-QAQC_SCRIPT = PROJECT_ROOT / "SRT/qaqc_srt.py"
+QAQC_SCRIPT = PROJECT_ROOT / "scripts/qaqc_srt.py"
 PHASE_B_SCRIPT = PROJECT_ROOT / "scripts/qaqc_phase_b.py"
 
 

@@ -26,10 +26,14 @@ WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/st
 
 | 從 study/ fork 的內容 | 政策 |
 |---|---|
-| `scripts/{session.py, qaqc_phase_b.py, publish_qaqc.py, publish_goodedunote.sh, compress_images.py, lang/}` | hard copy,**不互相依賴執行** |
-| `prompts/{qaqc_core_rules.md, publish_qaqc.md}` | hard copy,本地是 SSoT |
-| `dict/`、`SRT/`、`.claude/skills/good-student-notes/` | hard copy |
+| `scripts/{session.py, qaqc_phase_b.py, qaqc_srt.py}` | hard copy,**不互相依賴執行** |
+| `prompts/qaqc_core_rules.md` | hard copy,本地是 SSoT |
+| `dict/`、`.claude/skills/good-student-notes/` | hard copy |
 | `LICENSE`, `LICENSE-CONTENT`, `NOTICE` | hard copy(雙軌授權沿用) |
+
+WorkShop **不** fork 出版層(`publish_qaqc.py` / `publish_goodedunote.sh` /
+`compress_images.py` / `md_to_html.py` / `publish_qaqc.md` / Firebase 設定),
+因為 Meta-Loop 交付改為 markdown email,不出網頁。
 
 **鐵律**:
 1. WorkShop 內所有腳本**只引用 WorkShop/ 內檔**,絕不 import / source study/
@@ -85,9 +89,9 @@ WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/st
 
 ---
 
-## Step 1-5 系統(承襲 study,規則不變)
+## Step 1-4 系統(承襲 study,規則不變)
 
-工作坊跑 Meta-Loop 時(把上課錄影轉成好學生筆記)使用本專案的 Step 1-5:
+工作坊跑 Meta-Loop 時(把上課錄影轉成好學生筆記)使用本專案的 Step 1-4:
 
 ### Step 1-2(轉錄 + Phase A 清理 + Phase B 校稿)
 - 工具:`scripts/session.py new <audio>`
@@ -98,21 +102,18 @@ WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/st
 - 規則:`prompts/qaqc_core_rules.md` § R3 / R4
 - 工作坊用法:現場讓觀眾**親手在自己 cleaned.md 上做 Step 3 旁註與 Step 4 立場**
 
-### Step 4.5 / 6(出版前後 QAQC)
-- 規則:`prompts/publish_qaqc.md` § S4.5 / § S6
-- 工具:`scripts/publish_qaqc.py`(出版後 audit)
-
-### Step 5(出版到 Firebase goodedunote)
-- 工具:`scripts/publish_goodedunote.sh`(把 Meta-Loop 產出的 cleaned.md 上線)
-- 部署目標:沿用 study/ 同一個 Firebase 專案 `goodedunote`
-- 注意:WorkShop 的出版內容會放在獨立的 slug(例如 `workshop-<run-slug>`),
-  不與 study 既有的 koshi-cafe / code-with-claude-london / bim-revit-mcp 衝突
+### Meta-Loop 交付(代替 study 的 Step 5 出版)
+- WorkShop **不出網頁**。Step 4 產出的 markdown(cleaned.md /
+  enhanced.md / notes_<identity>.md 任一終點)**直接寄給觀眾**(email body
+  或 .md 附件)
+- 招生宣傳的承諾文字:「一週內收到一份好學生筆記」(不可暗示有網頁連結)
+- 時程約束見 W5 SLA
 
 ---
 
-## WorkShop 專屬:Lint(W1-W6)
+## WorkShop 專屬:Lint(W1-W5)
 
-工作坊有自己的產出對齊規則,獨立於 study 的 R / S 系列:
+工作坊有自己的產出對齊規則,獨立於 study 的 R 系列(轉錄/校稿):
 
 | Lint | 規則 | 自動化 |
 |---|---|---|
@@ -120,8 +121,7 @@ WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/st
 | **W2** 共同錄音三件套 | `materials/common-recording/<event>/{audio.mp3, cleaned.md, notebooklm-summary.md}` 必存且對齊 | 檔案存在 + cleaned.md 通過 R2.3 |
 | **W3** 紙本母版來源一致 | `materials/paper-handout/<event>/source.md` 是 common-recording cleaned.md 的全文或選段 | 子集檢查 |
 | **W4** 報名表↔節目單時長對齊 | registration-form.md 的時長要求 = sessions/<run>/schedule.md 的時長承諾 | regex 抽數字比對 |
-| **W5** Meta-Loop SLA | 錄影→cleaned.md ≤ 48hr;上線 ≤ 7 天;通知觀眾 ≤ 上線+24hr | metadata 時間戳比對 |
-| **W6** 出版承襲 study | publish 出去的每篇通過 `publish_qaqc.py` audit 全綠 | 呼叫 publish_qaqc.py |
+| **W5** Meta-Loop 交付 SLA | 錄影→cleaned.md ≤ 48hr;cleaned.md→寄送觀眾 ≤ 7 天 | metadata 時間戳比對 |
 
 **SSoT**:`prompts/workshop_qaqc.md`(W 規則定義 + lint 操作指南)
 **自動化**:`python3 scripts/workshop_lint.py`(支援 `--rule W1`、`--event <slug>`)
@@ -147,10 +147,10 @@ WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/st
   舉行工作坊,錄影
        ↓
 [Meta-Loop 後處理]
-  錄影 → Step 1-4 → publish 到 goodedunote
-  跑 workshop_lint.py --rule W5,W6
+  錄影 → Step 1-4 → 整理 markdown
+  跑 workshop_lint.py --rule W5 --event <run>
        ↓ (全綠)
-  寄 link 給觀眾
+  寄 .md 給觀眾(email body / 附件)
 ```
 
 ---
@@ -163,17 +163,15 @@ WorkShop/
 ├── LICENSE / LICENSE-CONTENT / NOTICE             # 雙軌授權
 ├── docs/
 │   └── workshop-design-v4.md   # 工作坊定案(2 小時設計細節)
-├── scripts/                    # Step 1-5 工具(從 study fork)+ workshop_lint.py
-├── prompts/                    # qaqc_core_rules.md / publish_qaqc.md / workshop_qaqc.md
+├── scripts/                    # session.py / qaqc_phase_b.py / qaqc_srt.py / workshop_lint.py
+├── prompts/                    # qaqc_core_rules.md(R 系列)/ workshop_qaqc.md(W 系列)
 ├── dict/                       # 共用詞典(typo_dict.json + hallucination_prefixes.json)
-├── SRT/                        # qaqc_srt.py(Phase A 清理)
 ├── .claude/skills/             # good-student-notes CLI skill
 ├── materials/                  # 工作坊預備材料
 │   ├── common-recording/<event>/
 │   ├── paper-handout/<event>/
 │   └── recruitment/
-├── sessions/<run-slug>/        # 實際工作坊跑場
-└── publish/                    # Meta-Loop 出版產物
+└── sessions/<run-slug>/        # 實際工作坊跑場(逐字稿、cleaned.md、metadata.json)
 ```
 
 ---

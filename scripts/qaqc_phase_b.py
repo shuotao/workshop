@@ -12,7 +12,7 @@ Four modes (pick one via --mode):
   --mode structured         → timecode-safe polish for --structured SRT flow
     Input  : JSON on stdin: {"texts": ["seg1", ...], "context": "..."}
     Output : JSON on stdout: {"texts": ["polished1", ...]}  (same length!)
-    Used by SRT/qaqc_srt.py --structured. LLM never sees timecodes.
+    Used by scripts/qaqc_srt.py --structured. LLM never sees timecodes.
 
   --mode enhance            → Step 3 enhanced.md (專有名詞補充)
     Input  : cleaned.md (file or stdin).

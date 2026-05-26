@@ -1,9 +1,8 @@
 # Local API keys
 .env
 
-# 私人 session / 出版產物(每場工作坊的處理資料夾)
+# 私人 session(每場工作坊的處理資料夾,含逐字稿與筆記)
 sessions/
-publish/
 
 # 工作坊預備材料中的敏感原檔(共同錄音的 mp3、紙本印刷 PDF 等)
 materials/common-recording/*/audio.mp3
@@ -24,7 +23,7 @@ materials/paper-handout/*/layout.pdf
 *.mpga
 *.mkv
 
-# Step 1-6 工作產物 file-level glob(任何位置都不上推)
+# Step 1-4 工作產物 file-level glob(任何位置都不上推)
 # 規則同 study/ — 這是好學生筆記方法論的鐵律:每篇處理過程留本機
 **/transcript.srt
 **/source.srt
@@ -33,12 +32,9 @@ materials/paper-handout/*/layout.pdf
 **/transcript.cleaned.srt
 **/enhanced.md
 **/notes_*.md
-**/toc.json
 **/metadata.json
 **/corrections.json
 **/_build/
-**/_kc_build/
-**/_translate/
 **/_workdir/
 **/_local_backup/
 **/.phase_*_pending.json

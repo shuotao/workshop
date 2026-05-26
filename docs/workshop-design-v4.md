@@ -162,9 +162,9 @@
 ### 課後端(Meta-Loop 履行,SLA 見 W5)
 
 1. **48 小時內**:錄影檔轉 mp3 → 跑 Step 1-2 → 講師親自做 Step 3-4
-2. **一週內**:上線到 `https://goodedunote.web.app/workshop-<run-slug>/`
-3. **上線 + 24 小時內**:寄 link 給觀眾
-4. **二次推播**:這場的 cleaned.md 截圖 + 觀眾在紙本上的旁註照片做成社群素材
+2. **一週內**:把 cleaned.md(或 enhanced.md / notes_<identity>.md)**直接寄給觀眾**
+   — email body 貼純 markdown 或附 .md 檔案,**不做網頁**
+3. **二次推播**:這場的 cleaned.md 截圖 + 觀眾在紙本上的旁註照片做成社群素材
 
 ---
 
