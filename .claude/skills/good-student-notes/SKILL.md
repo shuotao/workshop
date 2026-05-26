@@ -26,7 +26,7 @@ allowed-tools: Bash, Read, Write, Glob, Grep, Edit
   - 可以是一段文字(以引號包起)
   - 可以是一個 `.txt` 檔路徑
   - 可以是「剛才使用者貼在對話裡的資料」— 若對話中有補充內容,你應該先把它寫入 `/tmp/context_<session>.txt` 再傳入
-- `--domain <name>`:領域詞典(選填,例如:parenting, tech)— 對應 `dict/typo_dict.<name>.json`
+- `--domain <name>`:領域詞典(選填)— 對應 `dict/typo_dict.<name>.json`,WorkShop 目前無預設 overlay,若需要請自建 `dict/typo_dict.<name>.json` 後使用
 - 如果未提供 identity,跳過好學生筆記生成(只產 SRT 和合併校稿)
 
 ---
@@ -135,8 +135,7 @@ python3 scripts/session.py new "<media_file>" \
 
 - ❌ 不要自己從 `.srt` 做 Phase B 校稿 — 永遠呼叫 `scripts/qaqc_phase_b.py`
 - ❌ 不要在根目錄寫產出檔 — 一律寫到 `sessions/<slug>/`
-- ❌ 不要用 `SRT/context.example.txt` 當 context — 這是範例檔
-- ❌ 不要自動把 `corrections.json` 合進 `dict/typo_dict.*.json` — 需人工審閱
+- ❌ 不要自動把 `corrections.json` 合進 `dict/typo_dict.json` — 需人工審閱
 - ❌ 不要在輸出中使用第三人稱描述(「講者提到...」「本段討論...」等)
 
 ---

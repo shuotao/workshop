@@ -1,12 +1,11 @@
 # QAQC 核心規則 (Single Source of Truth)
 
 本檔為所有 Phase A / Phase B / 好學生筆記 / 知識補充流程的**核心鐵律**。
-CLI(`scripts/qaqc_phase_b.py`)與 Web(`web/studio.js`)的 prompt 組合器都從這裡
-引用規則文字。**任何規則修改只改這個檔**,兩端下次執行自動生效(Web 需 git pull 或
-cache-bust fetch)。
+CLI(`scripts/qaqc_phase_b.py`)的 prompt 組合器從這裡引用規則文字。
+**任何規則修改只改這個檔**,下次執行自動生效。
 
-⚠️ **本檔不是 prompt 本身**,而是 prompt 的「規則條款庫」。Prompt 的場景化包裝(如 Web
-使用者當下貼 context、CLI 自動從 session 讀)由兩端各自組合 — 本檔只提供共用鐵律。
+⚠️ **本檔不是 prompt 本身**,而是 prompt 的「規則條款庫」。Prompt 的場景化包裝
+(CLI 自動從 session 讀 context)由執行端組合 — 本檔只提供共用鐵律。
 
 ---
 
@@ -112,13 +111,7 @@ cache-bust fetch)。
 每個步驟的產物都是**合法終點**,使用者可以任意停在任一步驟:
 
 - CLI:`scripts/session.py new <audio> --stop-at {transcribe|phase-a|phase-b|enhance|notes}`
-- Web:每一步後按「下載」或「匯出 Session ZIP」即可終止;不需要一路跑到 Step 4
 - 不要把「跑完四步驟」當成成功的唯一定義。Step 2 滿足使用者的比例可能最高。
-
-### R6.3 Web 的差異化(未來方向,尚未實作)
-Web Studio 的獨特優勢目標是能驅動 **Gemini 圖像生成**(banana pro / gemini-2.5-flash-image)
-為好學生筆記產出**圖文並茂**的最終版本。這是文字管線之外的附加層,目前尚未實作,
-列為 P3 範圍。在實作前,Web 與 CLI 的 Step 4 輸出應保持文字面一致。
 
 ---
 
@@ -135,21 +128,10 @@ CORE_RULES = RULES_PATH.read_text(encoding="utf-8")
 prompt = f"...\n{extract_section(CORE_RULES, 'R2')}\n...具體任務..."
 ```
 
-### JavaScript(`web/studio.js`)
-
-```javascript
-const rulesResp = await fetch('../prompts/qaqc_core_rules.md');
-const CORE_RULES = await rulesResp.text();
-// 組合 prompt,套入 R2 區塊
-```
-
-實務上兩端的 prompt 組合模板不同(CLI 走自動化、Web 走互動式),但**規則文字本身
-來自同一份檔案**,維持 SSoT。
-
 ---
 
 ## 維護守則
 
-- **只改這一個檔**,不要在 qaqc_phase_b.py / studio.js / CLAUDE.md 中複製規則文字
+- **只改這一個檔**,不要在 qaqc_phase_b.py / CLAUDE.md 中複製規則文字
 - CLAUDE.md 有條件式重述時,以 `見 prompts/qaqc_core_rules.md § R2` 指向本檔
-- 規則變更請 commit 時寫清楚 why,因為 CLI 與 Web 行為都會同步改變
+- 規則變更請 commit 時寫清楚 why

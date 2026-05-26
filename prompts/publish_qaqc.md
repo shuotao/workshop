@@ -82,10 +82,17 @@
 ### S4.5.6 Slug 命名規則
 
 - ASCII 小寫,連字符分隔(`-`)
-- 例:`mcp5-may-2026`、`koshi-cafe`、`bim-revit-mcp-2026-05-23`
+- WorkShop 慣例:`workshop-<YYYY-MM>_<run-slug>`,例:`workshop-2026-06_first-run`
 - 一旦發布,**slug 不可變更**(URL 永久連結)
+- WorkShop 與 study 共用 Firebase project `goodedunote`,**slug 不可與 study 既有 slug 衝突**
+  (study 已用:`koshi-cafe`、`mcp5-may-2026`、`bim-revit-mcp-2026-05-23` 等)
 
 ### S4.5.7 Slug → 書架對映(必填且必須一致)
+
+⚠️ **WorkShop 適用性**:本節是承襲 study 的「書架根頁」模型(study 的根頁
+有 React `app.jsx` + `SHELVES` 多書架),WorkShop 目前**只出版 per-slug 子頁**,
+不擁有根頁。若 WorkShop 不部署根頁,本節僅作為與 study 共用 hosting 時的
+**對映參考**,實際 lint 由 § S6 階層性套用(見 § S6 開頭備註)。
 
 | 書架(`SHELVES[].id` in data.js) | shelf id | `--back-anchor` | `--back-label` |
 |---|---|---|---|
@@ -94,7 +101,7 @@
 | 讀書會 | `reading` | `shelf-reading` | `讀書會書架` |
 
 每個新出版的 slug 必須:
-1. 在 `scripts/publish/goodedunote/public/data.js` 的對應 SHELVES.books 陣列
+1. 在 `publish/goodedunote/public/data.js` 的對應 SHELVES.books 陣列
    尾端 push 一筆 entry(必填欄位見 § S6.3)
 2. 出版時帶上對應的 `--back-anchor` + `--back-label` flag
 3. 兩者**書架歸屬必須一致**(資料 vs 連結匹配)
@@ -112,37 +119,7 @@
 - [ ] 已決定要傳哪一組 `--back-anchor` + `--back-label`(對照 § S4.5.7)
 - [ ] `--cover`(若有)圖檔在 IMGSRC 存在
 
-### S4.5.9 文件家族同步清單(新增一本書 = 同時動多個檔)
-
-**核心思維**:書架描述不該寫「現況快照」,該寫「**這道書架的恆久定位**」。
-任何隨書本上線就過期的詞(`預告階段` / `各上線一本` / `即將推出` / `首本` /
-`目前僅有`),都該在 Step 4.5 被根除,而不是靠 Step 6 grep 攔截。
-
-每新增一本書(或修書本中繼資料),**publish 前**必須逐項 review:
-
-| 檔案 / 區塊 | 動作 | 何時改 |
-|---|---|---|
-| `public/data.js` SHELVES[i].books | **必加** entry(slug, title, subtitle, date, venue, duration, words, url, height, width, spineShade, quotes 3-4 筆) | 每次 |
-| `public/data.js` SHELVES[i].books 內的 placeholder | 視情況移除 / 改為下一本預告(平移占位)| 每次 |
-| `public/data.js` SHELVES[i].description | review,確認新書沒有改變書架的整體定位 | 每次 |
-| `public/app.jsx` Shelves SectionHead `title` + `sub` | **應為 count-agnostic** — 若發現寫了「N 本」/「目前」/「即將」必修 | 每次 |
-| `public/app.jsx` Hero / Footer / Manifesto | review 是否仍與書架現況不衝突(通常無關) | 每次 |
-| `prompts/publish_qaqc.md` § S4.5.7 對映表 | 若新增的是新類型書架(目前已有三類:public/seminar/reading),擴對映表 | 罕見 |
-| `CLAUDE.md` § Step 5 / 原則 8 範例指令 | 若示例指令引用的書本變動 | 罕見 |
-
-**書架描述的 timeless test**:寫完讀一遍,問自己「**第 N 本上線後這句話還對嗎?**」
-若否,改成 count-agnostic 用法。範例:
-
-| ❌ 會過時 | ✅ Timeless |
-|---|---|
-| 「目前公開活動、研討會各上線一本逐字稿;讀書會在預告階段」 | 「三道書架都已開張,書脊會隨每場新筆記橫向長出去」 |
-| 「首本即將上線」 | 「定期累積中」 |
-| 「2026.05 加入第一本」 | (改成只在 book.date 寫具體日期,書架描述不寫日期)|
-
-**S6.7 的 grep audit 是『最後安全網』,不是首道防線**。Audit 抓到紅旗詞代表
-S4.5.9 沒做好,應該回頭改文字而不是放任 grep 每次 fail。
-
-### S4.5.10 授權 footer(2026-05-25 引入)
+### S4.5.9 授權 footer(2026-05-25 引入)
 
 每張出版 HTML(index 與 session-*)的 footer **自動帶授權行**,內容由
 `md_to_html.py` baked-in:
@@ -162,9 +139,14 @@ S4.5.9 沒做好,應該回頭改文字而不是放任 grep 每次 fail。
 
 ## S6 出版後 QAQC(deployed HTML)
 
-對 `scripts/publish/goodedunote/public/<slug>/` 的本地副本做檢查
+對 `publish/goodedunote/public/<slug>/` 的本地副本做檢查
 (這份就是 Firebase deploy 的 source of truth)。所有條款應可在
 `scripts/publish_qaqc.py` 自動實作。
+
+⚠️ **適用性**:WorkShop 只出版 per-slug 子頁,**不擁有根頁**(根頁由 study 維護)。
+故 S6 只列 per-slug 規則;原本 study 的根頁規則(`app.jsx` site copy freshness、
+書架 CSS 視覺一致性、文件家族同步清單)在 WorkShop 不適用,已從本檔移除。
+若未來 WorkShop 接管根頁,需從 study 同步回對應規則。
 
 ### S6.1 檔案結構
 
@@ -190,14 +172,14 @@ S4.5.9 沒做好,應該回頭改文字而不是放任 grep 每次 fail。
 
 | 欄位 | 型別 | 範例 | 驗證 |
 |---|---|---|---|
-| `id` | string | `"bim-revit-mcp-2026-05-23"` | 等於 slug |
-| `title` | string | `"MCP 五月小聚 · VOL.05"` | 非空 |
-| `subtitle` | string | `"分享老師暴增的一個月份"` | 非空 |
-| `date` | string | `"2026.05.23"` | 點分式 YYYY.MM.DD |
-| `venue` | string | `"小樹屋 + Zoom · hybrid"` | 非空 |
-| `duration` | string | `"01h35"` | 非空(可寫 `"—"` 表未知)|
+| `id` | string | `"workshop-2026-06_first-run"` | 等於 slug |
+| `title` | string | `"好學生筆記內訓工作坊 · 2026.06"` | 非空 |
+| `subtitle` | string | `"第一場跑場 · Meta-Loop 實錄"` | 非空 |
+| `date` | string | `"2026.06.15"` | 點分式 YYYY.MM.DD |
+| `venue` | string | `"<場地名> · 線下"` | 非空 |
+| `duration` | string | `"02h00"` | 非空(可寫 `"—"` 表未知)|
 | `words` | number | `18433` | > 0(中文字總計)|
-| `url` | string | `"./bim-revit-mcp-2026-05-23/"` | 形如 `./<slug>/` |
+| `url` | string | `"./workshop-2026-06_first-run/"` | 形如 `./<slug>/` |
 | `height` | number | `340` | 200-400(書脊視覺高度,px)|
 | `width` | number | `62` | 40-80(書脊視覺寬度,px)|
 | `spineShade` | number | `0` 或 `1` | 配色變體;**0/1 都合法**,不檢查 > 0 |
@@ -222,48 +204,15 @@ S4.5.9 沒做好,應該回頭改文字而不是放任 grep 每次 fail。
 - 單一 slug 目錄下所有圖片總和應 **< 10MB**(已壓縮過)
 - 單張圖片 > 1MB 時應審視(壓縮失效或圖太大)
 
-### S6.7 Site copy freshness(最後安全網,不是首道防線)
+### S6.6 Per-page 視覺一致性
 
-⚠️ **這條規則是 backstop,不是 prevention**。真正的 prevention 是 § S4.5.9
-(出版前文件家族同步清單)。S6.7 只是 grep-based safety net,抓到 ✗ 代表
-S4.5.9 沒做好,應該回頭把那行文字改成 count-agnostic,而不是把紅旗詞加進
-白名單去敷衍 audit。
+對每張 session HTML / index.html 的內容做檢查(per-slug,不涉及根頁):
 
-**動機**:書架區的描述散在三個地方 — `app.jsx` 內的 `SectionHead`(title +
-sub)、`data.js` 內三道 shelf 各自的 `description`、書本 hover 卡片內的
-quotes。改一邊忘了另一邊,容易導致「一本書已上線、副標還寫『預告階段』」
-這類不同步。
-
-**規則**:`app.jsx`、`index.html`、`data.js` 內**禁止出現**以下硬寫狀態/
-數量詞,因為它們會隨書本上線而失效:
-
-| 紅旗詞 | 原因 |
-|---|---|
-| `預告階段` | 書架描述如果硬寫「預告階段」,書本一上線就矛盾 |
-| `尚未上線` | 同上(`spine-card` 內的 placeholder fallback 文字除外) |
-| `各上線一本` / `各上線 N 本` | 書架本數會增加 |
-| `還沒上線` / `即將推出` | 同 placeholder 例外 |
-| `首本` / `第一本` | 第二本上線後失效 |
-
-**例外**:`app.jsx` 的 `SpineCard` 內 placeholder books 顯示「逐字稿尚未上線,
-先佔個位置」是合法用法(只有未上線的書本看到),audit 會跳過。
-
-**自動偵測**:`scripts/publish_qaqc.py` 會 grep 上述紅旗詞,若出現在非
-placeholder 路徑即 ✗ 並要求人工確認。
-
-### S6.6 視覺一致性
-
-- **Dropcap**:`<p class="dropcap">` 不應緊接 `<strong>` 開頭(若有,代表
-  該段以 `**bold**` 開頭,規則由 `md_to_html.py` 自動偵測並跳過 dropcap)
-- **Spine card**(根頁面 hover 卡片):
-  - `.spine-card` 必須有 `max-width: min(320px, 84vw)`(行動裝置 safe area)
-  - `.shelf-scroller` 必須有足夠的左右 padding(desktop ≥ 160px / mobile ≥ 48px)
-    讓第一本書 hover 不破出畫面
-- **Scroll snap**:`.shelf` 必須有 `scroll-snap-align: start` + `scroll-margin-top`
-  搭配 fixed nav 高度
-- **Hash anchor 跨頁**:根頁面的 React App 必須在 mount 後重新檢查
-  `location.hash` 並 scrollIntoView(因為 React-Babel render 比瀏覽器預設
-  anchor scroll 慢,沒這層補償會落在 hero)
+- **Dropcap 不疊 `<strong>`**:`<p class="dropcap">` 不應緊接 `<strong>` 開頭
+  (若有,代表該段以 `**bold**` 開頭,規則由 `md_to_html.py` 自動偵測並跳過
+  dropcap)
+- **Markdown `**bold**` 已轉 `<strong>`**:HTML body 內不應殘留字面 `**...**`
+  (代表轉檔失敗)
 
 ### S6.7 後置檢查清單
 
@@ -272,7 +221,7 @@ placeholder 路徑即 ✗ 並要求人工確認。
 - [ ] § S6.3 data.js entry 完整且 shelf 對映一致
 - [ ] § S6.4 每個 HTML 有完整 OG/Twitter meta
 - [ ] § S6.5 圖片總量在預算內
-- [ ] § S6.6 視覺一致性(spine-card、scroll snap、hash anchor)無回歸
+- [ ] § S6.6 per-page 視覺一致性(dropcap + bold 轉換)
 
 ---
 
@@ -282,7 +231,7 @@ placeholder 路徑即 ✗ 並要求人工確認。
 - **S6 失敗**(出版後):
   - 若是 back-link 漏帶 → 重跑出版工具帶上正確 `--back-anchor` + `--back-label`
   - 若是 data.js 不一致 → 修 data.js + 重 deploy(`firebase deploy --only hosting`)
-  - 若是視覺一致性回歸 → 檢視 root style.css / app.jsx 是否被改動
+  - 若是 dropcap / bold 殘留 → 重跑 `md_to_html.py`(可能是版本不同步)
 
 ## 變更紀錄
 

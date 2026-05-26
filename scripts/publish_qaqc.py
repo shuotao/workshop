@@ -2,7 +2,8 @@
 """scripts/publish_qaqc.py — Step 6 出版後 QAQC 自動審查腳本
 
 讀 scripts/publish/goodedunote/public/data.js + 各 slug 目錄,對照
-prompts/publish_qaqc.md § S6 規則,逐 slug 跑 S6.1–S6.6 檢查。
+prompts/publish_qaqc.md § S6 規則,逐 slug 跑 S6.1–S6.6 檢查
+(WorkShop fork:已移除原 study 根頁專屬的 S6.7 site copy freshness)。
 
 用法:
     python3 scripts/publish_qaqc.py            # 審查所有非 placeholder 的 book
@@ -307,40 +308,6 @@ def audit_book(book: dict, shelf_id: str, pub_dir: Path) -> list[tuple]:
     return results
 
 
-def audit_site_copy(pub_dir: Path) -> list[tuple]:
-    """S6.7 Site copy freshness(safety net,不是 prevention)— grep
-    app.jsx / data.js / index.html 內的紅旗詞,flag 給人工確認。
-
-    ⚠️ 此檢查是『出版後 backstop』。真正的 prevention 應該在 Step 4.5
-    (見 prompts/publish_qaqc.md § S4.5.9 文件家族同步清單)。Audit 抓到 ✗
-    代表 S4.5.9 沒做好,應回頭把該文字改成 count-agnostic,而不是把紅旗詞
-    從本函數移除。
-    """
-    results = []
-    flags = ["預告階段", "各上線一本", "即將推出", "首本逐字稿", "尚未上線且", "還沒上線"]
-    # SpineCard 內的「逐字稿尚未上線」是合法 placeholder fallback,允許保留 —
-    # 故 "尚未上線" 不在預設紅旗詞,只比對更強的形式。
-    for fname in ("app.jsx", "data.js", "index.html"):
-        p = pub_dir / fname
-        if not p.is_file():
-            continue
-        txt = p.read_text(encoding="utf-8")
-        hits = []
-        for flag in flags:
-            for i, line in enumerate(txt.splitlines(), 1):
-                if flag in line:
-                    # SpineCard 內的 placeholder fallback 例外
-                    if "placeholder" in line.lower() or "佔個位置" in line:
-                        continue
-                    hits.append(f"{fname}:{i} {flag!r}")
-        results.append((
-            f"S6.7 site copy 紅旗詞({fname})",
-            not hits,
-            f"找到 {len(hits)} 處,請人工確認:{hits[:3]}" if hits else "clean",
-        ))
-    return results
-
-
 # ──────────────────────────────────────────────────────────────────
 # Main
 # ──────────────────────────────────────────────────────────────────
@@ -362,18 +329,6 @@ def main() -> int:
         return 2
 
     total_pass = total_fail = total_books = 0
-
-    # 跨書檢查:站台文字 freshness(S6.7)
-    if not args.slug:  # --slug 模式跳過,避免無關書本被 flag
-        print("\n=== Site copy freshness(S6.7,跨書) ===")
-        for rule_id, ok, detail in audit_site_copy(PUB):
-            if ok:
-                total_pass += 1
-                if not args.quiet:
-                    print(f"  ✓ {rule_id} — {detail}")
-            else:
-                total_fail += 1
-                print(f"  ✗ {rule_id} — {detail}")
 
     for shelf in shelves:
         shelf_id = shelf["id"]

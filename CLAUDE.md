@@ -29,7 +29,7 @@ WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/st
 | `scripts/{session.py, qaqc_phase_b.py, publish_qaqc.py, publish_goodedunote.sh, compress_images.py, lang/}` | hard copy,**不互相依賴執行** |
 | `prompts/{qaqc_core_rules.md, publish_qaqc.md}` | hard copy,本地是 SSoT |
 | `dict/`、`SRT/`、`.claude/skills/good-student-notes/` | hard copy |
-| `LICENSE`, `LICENSE-CONTENT`, `NOTICE`, `docs/origin-story.md` | hard copy(授權與緣起一致) |
+| `LICENSE`, `LICENSE-CONTENT`, `NOTICE` | hard copy(雙軌授權沿用) |
 
 **鐵律**:
 1. WorkShop 內所有腳本**只引用 WorkShop/ 內檔**,絕不 import / source study/
@@ -123,7 +123,7 @@ WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/st
 | **W5** Meta-Loop SLA | 錄影→cleaned.md ≤ 48hr;上線 ≤ 7 天;通知觀眾 ≤ 上線+24hr | metadata 時間戳比對 |
 | **W6** 出版承襲 study | publish 出去的每篇通過 `publish_qaqc.py` audit 全綠 | 呼叫 publish_qaqc.py |
 
-**SSoT**:`docs/lint-standards.md` 與 `prompts/workshop_qaqc.md`
+**SSoT**:`prompts/workshop_qaqc.md`(W 規則定義 + lint 操作指南)
 **自動化**:`python3 scripts/workshop_lint.py`(支援 `--rule W1`、`--event <slug>`)
 
 ---
@@ -162,14 +162,12 @@ WorkShop/
 ├── CLAUDE.md / GEMINI.md / AGENTS.md / README.md  # 規範與導引
 ├── LICENSE / LICENSE-CONTENT / NOTICE             # 雙軌授權
 ├── docs/
-│   ├── workshop-design-v4.md   # 工作坊定案(2 小時設計細節)
-│   ├── lint-standards.md       # W1-W6 規則 SSoT
-│   └── origin-story.md         # 緣起(從 study fork)
+│   └── workshop-design-v4.md   # 工作坊定案(2 小時設計細節)
 ├── scripts/                    # Step 1-5 工具(從 study fork)+ workshop_lint.py
-├── prompts/                    # SSoT 規則檔(從 study fork)+ workshop_qaqc.md
-├── dict/                       # 詞典(從 study fork)
-├── SRT/                        # SRT 工具(從 study fork)
-├── .claude/skills/             # CLI skills(從 study fork)
+├── prompts/                    # qaqc_core_rules.md / publish_qaqc.md / workshop_qaqc.md
+├── dict/                       # 共用詞典(typo_dict.json + hallucination_prefixes.json)
+├── SRT/                        # qaqc_srt.py(Phase A 清理)
+├── .claude/skills/             # good-student-notes CLI skill
 ├── materials/                  # 工作坊預備材料
 │   ├── common-recording/<event>/
 │   ├── paper-handout/<event>/

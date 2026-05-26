@@ -62,7 +62,6 @@ def format_srt(blocks: list[dict]) -> str:
 # ─── Phase A: deterministic cleanup (same for default and structured modes) ───
 
 # Regex patterns for garbled-text detection. Rules defined in prompts/qaqc_core_rules.md § R1.2.
-# Ported from web/studio.js:isGarbled() to keep CLI/Web behavior identical.
 _CJK_RE = re.compile(
     r"[一-鿿㐀-䶿豈-﫿　-〿＀-￯"
     r"，。！?、;:「」『』(()《》〈〉—…·~]"
@@ -78,8 +77,6 @@ def is_garbled(text: str) -> bool:
 
     Note: we do NOT flag single-character texts as garbled. 1-char Chinese
     replies ("對"/"嗯"/"好"/"對啊") are common and valid in dialogue transcripts.
-    The original Web `isGarbled` had `length < 2 → true` which silently dropped
-    legitimate content; fixed here and in `web/studio.js` to align.
     """
     if not text:
         return True
@@ -106,9 +103,7 @@ def phase_a_clean(blocks: list[dict], typo_map: dict[str, str],
                   strip_prefixes: list[str] | None = None) -> tuple[list[dict], dict]:
     """Apply deterministic cleanup in-place. Returns (surviving_blocks, stats).
 
-    Rules are defined in `prompts/qaqc_core_rules.md § R1`. This function is the
-    Python implementation; `web/studio.js:runPhaseA` is the JS mirror. Keep them
-    aligned — if you add a rule here, add it there too.
+    Rules are defined in `prompts/qaqc_core_rules.md § R1`.
 
     strip_prefixes: wrapper phrases that Whisper prepends to real speech (e.g.
     "主題是,"). Stripped at segment start; if the remainder is < 3 chars the

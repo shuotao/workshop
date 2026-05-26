@@ -87,11 +87,9 @@ python3 scripts/workshop_lint.py --event <event-slug>  # 限定某場
 |---|---|
 | [`CLAUDE.md`](./CLAUDE.md) | 專案憲法,所有 AI 工具的唯一規範 |
 | [`docs/workshop-design-v4.md`](./docs/workshop-design-v4.md) | 兩小時工作坊定案 |
-| [`docs/lint-standards.md`](./docs/lint-standards.md) | W1-W6 lint 規則 SSoT |
-| [`docs/origin-story.md`](./docs/origin-story.md) | 緣起脈絡(從 study fork) |
 | [`prompts/qaqc_core_rules.md`](./prompts/qaqc_core_rules.md) | Phase A/B、Step 3/4 規則(承襲 study) |
-| [`prompts/publish_qaqc.md`](./prompts/publish_qaqc.md) | Step 4.5/6 出版 QAQC(承襲 study) |
-| [`prompts/workshop_qaqc.md`](./prompts/workshop_qaqc.md) | WorkShop 專屬產出規範 |
+| [`prompts/publish_qaqc.md`](./prompts/publish_qaqc.md) | Step 4.5/6 出版 QAQC(承襲 study,已移除根頁專屬規則) |
+| [`prompts/workshop_qaqc.md`](./prompts/workshop_qaqc.md) | W1-W6 WorkShop 專屬規範 + lint 操作指南 |
 
 ---
 
