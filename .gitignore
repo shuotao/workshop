@@ -1,0 +1,59 @@
+# Local API keys
+.env
+
+# 私人 session / 出版產物(每場工作坊的處理資料夾)
+sessions/
+publish/
+
+# 工作坊預備材料中的敏感原檔(共同錄音的 mp3、紙本印刷 PDF 等)
+materials/common-recording/*/audio.mp3
+materials/common-recording/*/audio.m4a
+materials/common-recording/*/audio.wav
+materials/paper-handout/*/layout.pdf
+
+# 音訊 / 影片來源(任何位置)
+*.m4a
+*.mp3
+*.wav
+*.mp4
+*.mov
+*.webm
+*.flac
+*.ogg
+*.mpeg
+*.mpga
+*.mkv
+
+# Step 1-6 工作產物 file-level glob(任何位置都不上推)
+# 規則同 study/ — 這是好學生筆記方法論的鐵律:每篇處理過程留本機
+**/transcript.srt
+**/source.srt
+**/cleaned.md
+**/cleaned.srt
+**/transcript.cleaned.srt
+**/enhanced.md
+**/notes_*.md
+**/toc.json
+**/metadata.json
+**/corrections.json
+**/_build/
+**/_kc_build/
+**/_translate/
+**/_workdir/
+**/_local_backup/
+**/.phase_*_pending.json
+**/.step_*_pending.json
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# 編輯器 / 系統暫存
+*.bak
+*.swp
+*.swo
+.DS_Store
+
+# Personal Claude Code settings
+.claude/settings.local.json
