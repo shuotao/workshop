@@ -13,14 +13,16 @@
 
 ## W 系列規則範圍
 
-W 系列規則服務的是 **WorkShop 專屬產出**。WorkShop 不做網頁出版,Meta-Loop 交付
-形式為 markdown 直接寄給觀眾(email body 或附件),故與 study 的 S 系列(網頁
-出版 QAQC)切離,只承襲 R 系列(轉錄/校稿規則)。
+WorkShop 不做網頁出版,Meta-Loop 交付形式為 markdown 直接寄給觀眾(email body
+或附件)。整套 QAQC 規範只有兩層:
 
 | 系列 | 來源 | 範圍 |
 |---|---|---|
 | R(R1-R6) | `prompts/qaqc_core_rules.md` | Phase A / Phase B / Step 3 / Step 4 規則 |
 | **W(W1-W5)** | **本檔** | **WorkShop 招生、共同錄音、紙本、節目單、Meta-Loop 交付** |
+
+兩者正交:R 規範**內容品質**(逐字稿不能漏字、補充不能改原文),W 規範**交付對齊**
+(招生承諾不能漂移、SLA 不能跳票)。
 
 ---
 

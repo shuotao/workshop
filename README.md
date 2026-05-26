@@ -38,15 +38,6 @@ NotebookLM 的人),目標是讓參與者體驗到一個被多數 AI 工具忽略
 
 ---
 
-## 與 study/ 的關係
-
-WorkShop 從鄰近的 study/(`/Users/shuotaochiang/Desktop/study/`)
-**fork** 出 Step 1-5 工具與規則,**永久獨立執行**,兩專案不互相依賴。
-
-詳見 [`CLAUDE.md`](./CLAUDE.md) § 與 study/ 主專案的關係。
-
----
-
 ## 快速上手
 
 ### 環境
@@ -87,7 +78,7 @@ python3 scripts/workshop_lint.py --event <event-slug>  # 限定某場
 |---|---|
 | [`CLAUDE.md`](./CLAUDE.md) | 專案憲法,所有 AI 工具的唯一規範 |
 | [`docs/workshop-design-v4.md`](./docs/workshop-design-v4.md) | 兩小時工作坊定案 |
-| [`prompts/qaqc_core_rules.md`](./prompts/qaqc_core_rules.md) | Phase A/B、Step 3/4 規則(承襲 study) |
+| [`prompts/qaqc_core_rules.md`](./prompts/qaqc_core_rules.md) | Phase A/B、Step 3/4 規則 |
 | [`prompts/workshop_qaqc.md`](./prompts/workshop_qaqc.md) | W1-W5 WorkShop 專屬規範 + lint 操作指南 |
 
 ---

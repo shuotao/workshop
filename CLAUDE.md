@@ -19,27 +19,14 @@ inside this folder.
 
 工作坊設計詳見 [`docs/workshop-design-v4.md`](./docs/workshop-design-v4.md)。
 
-## 與 study/ 主專案的關係(獨立性政策)
+## 獨立性政策
 
-WorkShop **fork** 自鄰近的 study/ 主專案(`/Users/shuotaochiang/Desktop/study/`),
-時間點:**2026-05-26**。
-
-| 從 study/ fork 的內容 | 政策 |
-|---|---|
-| `scripts/{session.py, qaqc_phase_b.py, qaqc_srt.py}` | hard copy,**不互相依賴執行** |
-| `prompts/qaqc_core_rules.md` | hard copy,本地是 SSoT |
-| `dict/`、`.claude/skills/good-student-notes/` | hard copy |
-| `LICENSE`, `LICENSE-CONTENT`, `NOTICE` | hard copy(雙軌授權沿用) |
-
-WorkShop **不** fork 出版層(`publish_qaqc.py` / `publish_goodedunote.sh` /
-`compress_images.py` / `md_to_html.py` / `publish_qaqc.md` / Firebase 設定),
-因為 Meta-Loop 交付改為 markdown email,不出網頁。
+WorkShop 是自包含專案,所有腳本與規則檔本地齊備,無外部依賴。
 
 **鐵律**:
-1. WorkShop 內所有腳本**只引用 WorkShop/ 內檔**,絕不 import / source study/
-2. study/ 之後若更新這些檔,WorkShop **不自動同步**;需人工 diff + apply
-3. WorkShop 與 study/ 是 sibling 目錄,**.gitignore 互不重疊**,彼此私資料互不干擾
-4. 任何在 WorkShop 內的 AI agent 看到指向 `/Users/shuotaochiang/Desktop/study/` 的路徑,**應視為錯誤**,並改成 WorkShop 本地路徑
+1. 所有腳本**只引用 WorkShop/ 內檔**,絕不 import 或 source 外部專案路徑
+2. 任何 AI agent 看到絕對路徑(如 `/Users/.../<other-project>/`)在引用流程裡,**應視為錯誤**,改成 WorkShop 本地路徑
+3. Meta-Loop **不做網頁出版**,交付形式為純 markdown(email body 或 .md 附件)
 
 ---
 
@@ -89,7 +76,7 @@ WorkShop **不** fork 出版層(`publish_qaqc.py` / `publish_goodedunote.sh` /
 
 ---
 
-## Step 1-4 系統(承襲 study,規則不變)
+## Step 1-4 系統
 
 工作坊跑 Meta-Loop 時(把上課錄影轉成好學生筆記)使用本專案的 Step 1-4:
 
@@ -102,7 +89,7 @@ WorkShop **不** fork 出版層(`publish_qaqc.py` / `publish_goodedunote.sh` /
 - 規則:`prompts/qaqc_core_rules.md` § R3 / R4
 - 工作坊用法:現場讓觀眾**親手在自己 cleaned.md 上做 Step 3 旁註與 Step 4 立場**
 
-### Meta-Loop 交付(代替 study 的 Step 5 出版)
+### Meta-Loop 交付
 - WorkShop **不出網頁**。Step 4 產出的 markdown(cleaned.md /
   enhanced.md / notes_<identity>.md 任一終點)**直接寄給觀眾**(email body
   或 .md 附件)
@@ -113,7 +100,7 @@ WorkShop **不** fork 出版層(`publish_qaqc.py` / `publish_goodedunote.sh` /
 
 ## WorkShop 專屬:Lint(W1-W5)
 
-工作坊有自己的產出對齊規則,獨立於 study 的 R 系列(轉錄/校稿):
+工作坊有自己的產出對齊規則(W 系列),與 R 系列(轉錄/校稿規則)正交:
 
 | Lint | 規則 | 自動化 |
 |---|---|---|
@@ -193,7 +180,7 @@ WorkShop/
 
 ---
 
-## 雙軌授權(沿用 study 政策)
+## 雙軌授權
 
 - **程式碼**:MIT(`LICENSE`)
 - **內容**(站台文案、講者逐字稿、好學生筆記):CC BY 4.0(`LICENSE-CONTENT`)
@@ -208,8 +195,8 @@ WorkShop/
 1. **Groq Whisper prompt 896 bytes UTF-8 上限** — 中文字 3 bytes/字 → context ≤ ~290 中文字。送 Groq 前用 `wc -c` 確認。
 2. **共同錄音的時長選擇** — 過短(<10 min)NBLM vs 好學生筆記的對比不明顯。建議 30-60 min。
 3. **紙本印刷必須留邊欄** — 給觀眾寫字,左右邊各 4cm,字行距 1.8 倍。
-4. **Meta-Loop 失約 = 信任崩塌** — 答應一週上線就不能拖。若做不到,寧可不承諾。
+4. **Meta-Loop 失約 = 信任崩塌** — 答應一週寄出就不能拖。若做不到,寧可不承諾。
 
 ## 變更紀錄
 
-- **2026-05-26 v0**:從 study/ fork bootstrap,建立 WorkShop 專案骨架
+- **2026-05-26 v0**:WorkShop 專案骨架初版

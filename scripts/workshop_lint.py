@@ -10,7 +10,7 @@
 因為現在還沒有 sessions/<run>/registration-form.md 範本可比對。
 
 (W6 已移除:WorkShop 不做網頁出版,Meta-Loop 交付改為 markdown email,
-原 W6「出版產物承襲 study」規則整節退場。)
+原 W6 出版產物 audit 規則整節退場。)
 
 用法:
     python3 scripts/workshop_lint.py                # 跑全部已實作的 W
