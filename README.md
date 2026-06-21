@@ -62,6 +62,27 @@ python3 scripts/session.py new <audio_file> --context "背景關鍵字"
 # 產物落在 sessions/<YYYY-MM-DD_slug>/
 ```
 
+### 圖像版好學生筆記生成 (Step 4 圖像化)
+
+可以使用以下指令，將好學生筆記 Markdown 檔案渲染成帶有手寫註解的圖像：
+
+1. **Stage 1: 產生 A4 尺寸底圖 (與身分無關)**
+   ```bash
+   python3 scripts/image_notes_session.py note <notes_file.md>
+   # 例如：python3 scripts/image_notes_session.py note sessions/2026-06-21_lightalking/notes_義式咖啡手沖專家.md --slug 2026-06-21_lightalking
+   # 產物為 sessions/<slug>/note/base_pNN.png 底圖
+   ```
+2. **Stage 2: 產生生圖提示清單**
+   ```bash
+   python3 scripts/image_notes_session.py notes <slug> --identity "<身分>"
+   # 例如：python3 scripts/image_notes_session.py notes 2026-06-21_lightalking --identity "義式咖啡手沖專家"
+   # 產物為 sessions/<slug>/note/banana_prompts_<身分>.md
+   ```
+3. **生圖 (手寫彩色標記與類比置入)**
+   * **Antigravity IDE / Codex**: 執行端會使用原生的 `generate_image` 工具（Imagen 2）吃底圖並根據 prompt 疊加手寫字，產出視覺化好學生筆記（`pNN.png`）。
+   * **Gemini CLI**: 使用 `nanobanana` extension。
+   * **手動方式**: 將底稿圖拖入 Nano Banana 工具，配合對應頁數提示生成。
+
 ### 工作坊產出 lint
 
 ```bash
@@ -71,6 +92,7 @@ python3 scripts/workshop_lint.py --event <event-slug>  # 限定某場
 ```
 
 ---
+
 
 ## 規範文件(SSoT)
 

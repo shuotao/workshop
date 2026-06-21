@@ -89,12 +89,23 @@ WorkShop 是自包含專案,所有腳本與規則檔本地齊備,無外部依賴
 - 規則:`prompts/qaqc_core_rules.md` § R3 / R4
 - 工作坊用法:現場讓觀眾**親手在自己 cleaned.md 上做 Step 3 旁註與 Step 4 立場**
 
+### 好學生筆記圖像版 (生圖機制)
+- 規則:`prompts/image_notes_design.md` (6色手寫語義與類比庫) + `prompts/image_notes_skill.md` (生圖 SOP)
+- 流程：
+  1. **Stage 1 (生底稿)**: `python3 scripts/image_notes_session.py note <file.md>` -> 用 Playwright 渲染成 A4 尺寸 `base_pNN.png`
+  2. **Stage 2 (生圖指令)**: `python3 scripts/image_notes_session.py notes <slug> --identity "<身份>"` -> 產生 `banana_prompts_<身份>.md`
+  3. **生圖**:
+     - **Antigravity IDE / Codex**: 執行端會使用 `generate_image` 工具（Imagen 2）吃底圖並根據 prompt 疊加手寫字，產出視覺化好學生筆記（`pNN.png`）。
+     - **Gemini CLI**: 使用 `nanobanana` extension。
+     - **手動**: 拖入 Nano Banana 工具生圖。
+
 ### Meta-Loop 交付
-- WorkShop **不出網頁**。Step 4 產出的 markdown(cleaned.md /
-  enhanced.md / notes_<identity>.md 任一終點)**直接寄給觀眾**(email body
-  或 .md 附件)
+- WorkShop **不出網頁**。Step 4 產出的 markdown (cleaned.md /
+  enhanced.md / notes_<identity>.md 任一終點) 或上述圖像版好學生筆記**直接寄給觀眾**(email body
+  或 .md / .png 附件)
 - 招生宣傳的承諾文字:「一週內收到一份好學生筆記」(不可暗示有網頁連結)
 - 時程約束見 W5 SLA
+
 
 ---
 
@@ -150,16 +161,19 @@ WorkShop/
 ├── LICENSE / LICENSE-CONTENT / NOTICE             # 雙軌授權
 ├── docs/
 │   └── workshop-design-v4.md   # 工作坊定案(2 小時設計細節)
-├── scripts/                    # session.py / qaqc_phase_b.py / qaqc_srt.py / workshop_lint.py
-├── prompts/                    # qaqc_core_rules.md(R 系列)/ workshop_qaqc.md(W 系列)
+├── scripts/                    # session.py/qaqc_phase_b.py/qaqc_srt.py/workshop_lint.py/image_notes_session.py/md_to_a4_png.py
+├── prompts/                    # qaqc_core_rules.md(R 系列)/workshop_qaqc.md(W 系列)/image_notes_design.md/image_notes_skill.md
 ├── dict/                       # 共用詞典(typo_dict.json + hallucination_prefixes.json)
 ├── .claude/skills/             # good-student-notes CLI skill
+├── .agent/workflows/           # Antigravity IDE /note 與 /好學生筆記 工作流指令
+├── .gemini/commands/           # Gemini CLI note 與 好學生筆記 自訂指令
 ├── materials/                  # 工作坊預備材料
 │   ├── common-recording/<event>/
 │   ├── paper-handout/<event>/
 │   └── recruitment/
 └── sessions/<run-slug>/        # 實際工作坊跑場(逐字稿、cleaned.md、metadata.json)
 ```
+
 
 ---
 
