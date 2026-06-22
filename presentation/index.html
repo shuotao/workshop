@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>好學生筆記 — Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;700&family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   V–A–C Style System  (achromatic editorial / exhibition catalog)
+   ink #000 · paper #fff · graphite #999 · single weight 400 · 0 radius
+   ============================================================ */
+:root{
+  /* Henry — warm broadside monochrome */
+  --color-ink:#2a2722;        /* Headline Ink — warm near-black */
+  --color-paper:#fafafa;      /* Paper — cream-white */
+  --color-graphite:#8c877e;   /* warm muted text */
+  --color-ash:#666666;        /* secondary muted */
+  --color-field:#eeeeee;      /* hairline */
+  --color-inkline:#4a463f;    /* hairline on ink sections */
+  --font-text:'Inter',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
+  --font-serif:'Fraunces','Noto Serif TC',Georgia,serif;
+  --font-stamp:'Anton','Noto Sans TC',Impact,sans-serif;
+  --radius:12px;
+  --leading-tight:0.88;
+  --leading-body:1.5;
+  --page-max:1440px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+html,body{height:100%;}
+body{
+  font-family:var(--font-text);
+  font-weight:400;
+  color:var(--color-ink);
+  background:var(--color-paper);
+  overflow:hidden;
+  line-height:var(--leading-body);
+  letter-spacing:-0.01em;
+}
+::selection{background:var(--color-ink);color:var(--color-paper);}
+
+/* ---------- V—A—C registration bar ---------- */
+.regbar{
+  position:fixed;top:0;left:0;right:0;height:0;
+  border-top:1px solid var(--color-ink);
+  z-index:50;
+}
+.regbar .mark{
+  position:absolute;top:6px;font-size:20px;line-height:1;letter-spacing:.04em;
+}
+.regbar .v{left:24px;}
+.regbar .a{left:50%;transform:translateX(-50%);text-align:center;}
+.regbar .a .up{display:block;font-size:13px;margin-top:2px;}
+.regbar .c{right:24px;}
+
+/* ---------- right edge vertical nav ---------- */
+.edgenav{
+  position:fixed;right:10px;top:50%;transform:translateY(-50%);
+  writing-mode:vertical-rl;
+  font-size:15px;letter-spacing:.14em;z-index:40;
+  color:var(--color-ink);user-select:none;
+}
+.edgenav span{color:var(--color-graphite);}
+.edgenav b{font-weight:400;}
+
+/* ---------- left edge locale ---------- */
+.localesw{
+  position:fixed;left:16px;bottom:16px;font-size:14px;z-index:40;
+  color:var(--color-graphite);user-select:none;letter-spacing:.02em;
+}
+
+/* ---------- deck ---------- */
+.deck{position:relative;width:100%;height:100%;}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:64px clamp(40px,7vw,150px) 96px;
+  max-width:var(--page-max);margin:0 auto;
+  opacity:0;visibility:hidden;transform:translateY(14px);
+  transition:opacity .45s ease,transform .45s ease,visibility .45s;
+  overflow-y:auto;
+}
+.slide.active{opacity:1;visibility:visible;transform:none;}
+.slide.top{justify-content:flex-start;}
+
+/* kicker → Henry uppercase eyebrow */
+.kicker{
+  font-family:var(--font-text);font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--color-ash);margin-bottom:30px;
+  display:flex;gap:12px;align-items:baseline;
+}
+.kicker .num{color:var(--color-graphite);}
+.kicker .arrow{}
+
+/* Henry is shadowless / watermark-free — drop the V–A–C ghost numbers */
+.watermark{display:none;}
+
+/* inverted editorial letter (closing) */
+.slide.letter{justify-content:center;align-items:center;text-align:center;}
+.letter-eyebrow,.letter-foot{font-family:var(--font-text);font-size:12px;text-transform:uppercase;
+  letter-spacing:.14em;color:#a8a299;}
+.letter-eyebrow{margin-bottom:36px;}
+.letter-foot{margin-top:36px;max-width:46ch;}
+.letter-body{font-family:var(--font-serif);font-size:clamp(24px,3.2vw,42px);line-height:1.45;
+  color:var(--color-paper);max-width:24ch;margin:0 auto;}
+.letter-body em{font-style:italic;}
+
+h1.display{
+  font-family:var(--font-serif);font-weight:400;
+  font-size:clamp(40px,6.5vw,84px);line-height:var(--leading-tight);
+  letter-spacing:-.02em;max-width:16ch;margin-bottom:28px;
+}
+h2.display{
+  font-family:var(--font-serif);font-weight:400;
+  font-size:clamp(30px,4.4vw,56px);line-height:0.9;letter-spacing:-.02em;
+  margin-bottom:24px;max-width:20ch;
+}
+.stamp{
+  font-family:var(--font-stamp);text-transform:uppercase;font-weight:400;
+  line-height:0.82;letter-spacing:0;
+}
+/* Henry — single 12px radius, no shadows */
+a.toolcard,.codewrap,.spbox,.hstep,a.btnbox,.player,.icard,.genwrap,.note,
+.copybtn,.gencopy,.spcopy,.navbtns button,.stepnav button,.step-rail,.fnrow{
+  border-radius:var(--radius);
+}
+.codewrap,.spbox,.player{overflow:hidden;}
+.lead{font-family:var(--font-serif);font-size:clamp(19px,1.7vw,24px);line-height:1.4;max-width:50ch;margin-bottom:20px;}
+.lead b{font-weight:500;font-style:italic;}
+p.body{font-size:17px;max-width:54ch;margin-bottom:16px;}
+.muted{color:var(--color-graphite);}
+
+ul.list{list-style:none;max-width:60ch;}
+ul.list li{
+  font-size:18px;padding:14px 0 14px 26px;position:relative;
+  border-top:1px solid var(--color-ink);
+}
+ul.list li:first-child{border-top:1px solid var(--color-ink);}
+ul.list li:before{content:"↗";position:absolute;left:0;top:14px;}
+ul.list.plain li:before{content:"—";color:var(--color-graphite);}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,60px);align-items:start;}
+.cols.s31{grid-template-columns:1fr 1fr;}
+
+/* comparison table — museum label style, no color */
+table.vac{width:100%;border-collapse:collapse;font-size:16px;max-width:760px;}
+table.vac th,table.vac td{
+  text-align:left;vertical-align:top;padding:12px 16px;
+  border-top:1px solid var(--color-ink);
+}
+table.vac thead th{border-top:none;color:var(--color-graphite);font-weight:400;}
+table.vac tbody td:first-child{color:var(--color-graphite);width:8ch;}
+
+/* watermark */
+.watermark{
+  position:absolute;right:6vw;top:50%;
+  transform:translateY(-50%) rotate(34deg);transform-origin:center;
+  color:var(--color-field);font-size:clamp(80px,16vw,200px);
+  line-height:.8;letter-spacing:-.04em;z-index:-1;pointer-events:none;
+  white-space:nowrap;
+}
+
+/* ---------- audio + transcript (slide 3) ---------- */
+.exp-wrap{display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(28px,4vw,56px);align-items:stretch;height:100%;padding-top:8px;}
+.exp-left{display:flex;flex-direction:column;justify-content:center;}
+.exp-left .lead{margin-bottom:26px;}
+.player{border:1px solid var(--color-ink);padding:22px;max-width:420px;}
+.player .ptitle{font-size:16px;margin-bottom:14px;}
+.player .ptitle .muted{display:block;}
+.player audio{width:100%;filter:grayscale(1);}
+.player .tip{font-size:14px;color:var(--color-graphite);margin-top:16px;line-height:1.5;}
+.exp-right{display:flex;flex-direction:column;min-height:0;border-left:1px solid var(--color-ink);padding-left:clamp(20px,2.5vw,40px);}
+.tx-head{font-size:16px;color:var(--color-graphite);margin-bottom:14px;display:flex;justify-content:space-between;}
+.transcript{overflow-y:auto;flex:1;min-height:0;padding-right:14px;}
+.transcript .cue{
+  font-size:17px;line-height:1.55;padding:7px 0;color:var(--color-graphite);
+  transition:color .3s ease;border:none;
+}
+.transcript .cue.spoken{color:#555;}
+.transcript .cue.active{color:var(--color-ink);}
+.transcript .cue.active:before{content:"▸ ";}
+
+/* ---------- code block (slide 8) ---------- */
+.codewrap{border:1px solid var(--color-ink);max-width:880px;margin-top:10px;position:relative;}
+.codebar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--color-ink);padding:10px 16px;font-size:14px;}
+.copybtn{font-family:inherit;font-size:14px;background:none;border:1px solid var(--color-ink);padding:5px 14px;cursor:pointer;color:var(--color-ink);}
+.copybtn:hover{background:var(--color-ink);color:var(--color-paper);}
+.copybtn.done{background:var(--color-ink);color:var(--color-paper);}
+pre.code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:13px;line-height:1.55;padding:18px 20px;overflow:auto;max-height:56vh;
+  white-space:pre-wrap;word-break:break-word;background:var(--color-paper);color:var(--color-ink);
+}
+
+/* sub-note blocks (knowledge / stance) reused on content slides */
+.note{border-left:2px solid var(--color-ink);padding:4px 0 4px 18px;margin:18px 0;max-width:54ch;font-size:17px;}
+.note .tag{color:var(--color-graphite);}
+
+a.refit{color:var(--color-ink);text-decoration:none;border-bottom:1px solid var(--color-ink);}
+a.refit:before{content:"↗ ";}
+
+/* ---------- bottom progress / controls ---------- */
+.foot{
+  position:fixed;left:0;right:0;bottom:0;height:0;border-top:1px solid var(--color-ink);
+  z-index:45;
+}
+.counter{position:fixed;bottom:14px;right:24px;font-size:16px;z-index:46;}
+.counter .muted{color:var(--color-graphite);}
+.navbtns{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:46;display:flex;gap:10px;}
+.navbtns button{font-family:inherit;font-size:16px;background:none;border:1px solid var(--color-ink);width:38px;height:32px;cursor:pointer;color:var(--color-ink);}
+.navbtns button:hover{background:var(--color-ink);color:var(--color-paper);}
+.navbtns button:disabled{opacity:.25;cursor:default;}
+
+/* thin progress line directly under the registration bar */
+.progline{position:fixed;top:0;left:0;height:2px;background:var(--color-ink);z-index:49;width:0;transition:width .45s ease;}
+
+.hint{position:fixed;bottom:52px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--color-graphite);z-index:46;white-space:nowrap;}
+
+/* ---------- slide 1: tool download grid ---------- */
+.tools-head{font-size:16px;color:var(--color-graphite);margin:34px 0 14px;}
+.tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:880px;}
+a.toolcard{
+  display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--color-ink);
+  border:1px solid var(--color-ink);padding:16px 16px 18px;min-height:118px;
+}
+a.toolcard:hover{background:var(--color-ink);color:var(--color-paper);}
+a.toolcard .ic{font-size:22px;line-height:1;}
+a.toolcard .tname{font-size:17px;}
+a.toolcard .tdesc{font-size:13px;color:var(--color-graphite);line-height:1.45;}
+a.toolcard:hover .tdesc{color:#ccc;}
+a.toolcard .dl{font-size:12px;margin-top:auto;}
+a.toolcard .dl:before{content:"↓ ";}
+
+/* ---------- slide 5: mindset stepper ---------- */
+.stepper{display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,4vw,52px);max-width:920px;margin-top:8px;align-items:start;}
+.step-rail{display:flex;gap:0;border:1px solid var(--color-ink);margin-bottom:24px;}
+.step-rail button{
+  flex:1;font-family:inherit;font-size:15px;background:none;border:none;border-left:1px solid var(--color-ink);
+  padding:10px 6px;cursor:pointer;color:var(--color-graphite);
+}
+.step-rail button:first-child{border-left:none;}
+.step-rail button.on{background:var(--color-ink);color:var(--color-paper);}
+.step-body .sno{font-size:14px;color:var(--color-graphite);margin-bottom:8px;}
+.step-body h3{font-size:clamp(24px,3vw,34px);line-height:0.95;margin-bottom:14px;font-weight:400;}
+.step-body p{font-size:18px;max-width:46ch;}
+.step-aside{border-left:1px solid var(--color-ink);padding-left:clamp(18px,2.5vw,34px);}
+.step-aside .lab{font-size:14px;color:var(--color-graphite);margin-bottom:10px;}
+.step-aside .pair{font-size:20px;line-height:1.5;}
+.step-aside .pair b{font-weight:400;border-bottom:1px solid var(--color-ink);}
+.spbox{border:1px solid var(--color-ink);margin-top:14px;max-width:48ch;}
+.spbox .spbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--color-ink);padding:7px 12px;font-size:12px;color:var(--color-graphite);}
+.spbox .spcopy{font-family:inherit;font-size:12px;background:none;border:1px solid var(--color-ink);padding:3px 10px;cursor:pointer;color:var(--color-ink);}
+.spbox .spcopy:hover,.spbox .spcopy.done{background:var(--color-ink);color:var(--color-paper);}
+.spbox .sptext{padding:12px;font-size:14px;line-height:1.6;white-space:pre-wrap;}
+.stepnav{display:flex;gap:10px;margin-top:26px;}
+.stepnav button{font-family:inherit;font-size:15px;background:none;border:1px solid var(--color-ink);padding:6px 16px;cursor:pointer;color:var(--color-ink);}
+.stepnav button:hover{background:var(--color-ink);color:var(--color-paper);}
+.stepnav button:disabled{opacity:.25;cursor:default;}
+
+/* ---------- INK band: fixed UI flips to cream on full-bleed dark slides ---------- */
+body.dark-mode{background:var(--color-ink);}
+body.dark-mode .regbar{border-color:var(--color-paper);}
+body.dark-mode .regbar .mark{color:var(--color-paper);}
+body.dark-mode .edgenav{color:var(--color-paper);}
+body.dark-mode .edgenav span,body.dark-mode .localesw,body.dark-mode .counter .muted,body.dark-mode .hint{color:#a8a299;}
+body.dark-mode .counter{color:var(--color-paper);}
+body.dark-mode .progline{background:var(--color-paper);}
+body.dark-mode .navbtns button{border-color:var(--color-paper);color:var(--color-paper);}
+body.dark-mode .navbtns button:hover{background:var(--color-paper);color:var(--color-ink);}
+
+/* ---------- slide 6 — Physics of Insight (full-bleed INK broadside) ---------- */
+.slide.dark{background:var(--color-ink);color:var(--color-paper);}
+.slide.dark .kicker{color:var(--color-paper);}
+.slide.dark .kicker .num{color:#a8a299;}
+.poi-masthead{font-family:var(--font-stamp);text-transform:uppercase;line-height:0.8;
+  font-size:clamp(44px,9vw,118px);color:var(--color-paper);margin:2px 0 6px;letter-spacing:-.01em;}
+.poi-sub{font-family:var(--font-serif);font-size:clamp(22px,2.6vw,32px);color:var(--color-paper);margin-bottom:18px;}
+.poi-intro{font-family:var(--font-serif);font-size:clamp(17px,1.7vw,21px);line-height:1.45;max-width:62ch;margin-bottom:26px;color:#e7e3da;}
+.poi-intro b{font-weight:500;color:var(--color-paper);font-style:italic;}
+.insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1160px;}
+.icard{
+  border:1px solid var(--color-inkline);background:transparent;cursor:pointer;
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:border-color .2s ease,opacity .2s ease,transform .2s ease;
+}
+.icard:hover{border-color:#7c766b;transform:translateY(-2px);}
+.icard .ithumb{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:var(--color-ink);}
+.icard .ipad{padding:14px 16px 16px;display:flex;flex-direction:column;gap:5px;}
+.icard .inum{font-size:12px;color:#a8a299;letter-spacing:.04em;}
+.icard .izh{font-family:var(--font-serif);font-size:22px;line-height:1.1;color:var(--color-paper);}
+.icard .ien{font-size:11px;color:#a8a299;letter-spacing:.06em;text-transform:uppercase;}
+.icard .istate{font-family:var(--font-serif);font-size:15px;line-height:1.5;color:#d8d3c9;margin-top:5px;}
+.icard .htbox{display:none;border-top:1px solid var(--color-inkline);margin-top:10px;padding-top:12px;flex-direction:column;gap:10px;}
+.icard .hrow{font-size:13px;line-height:1.55;color:#cfcabf;}
+.icard .hrow .hlab{font-size:10px;letter-spacing:.14em;color:var(--color-paper);border:1px solid #7c766b;border-radius:12px;padding:2px 8px;margin-right:8px;}
+.icard.open{grid-column:span 3;border-color:var(--color-paper);}
+.icard.open .ipad{flex-direction:row;flex-wrap:wrap;gap:6px 32px;align-items:flex-start;}
+.icard.open .ithumb{aspect-ratio:auto;height:260px;width:auto;max-width:46%;object-fit:contain;}
+.icard.open .istate{font-size:24px;flex-basis:100%;max-width:62ch;color:var(--color-paper);}
+.icard.open .htbox{display:flex;flex-basis:100%;}
+.poi-tip{font-size:13px;color:#a8a299;margin-top:16px;}
+.manifesto{font-family:var(--font-serif);border-top:1px solid var(--color-inkline);margin-top:28px;padding-top:22px;max-width:64ch;font-size:clamp(18px,2vw,24px);line-height:1.5;color:#ece8df;}
+.manifesto b{font-weight:400;font-style:italic;background:var(--color-paper);color:var(--color-ink);padding:0 6px;}
+
+/* ---------- slide 7 — PAPER broadside: function list (left) + live weight block (right) ---------- */
+.weigh-layout{display:grid;grid-template-columns:1.05fr 0.95fr;gap:clamp(20px,3vw,44px);align-items:start;max-width:1240px;margin-top:6px;}
+.weigh-right{position:sticky;top:6px;}
+.fn-eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--color-ash);margin-bottom:10px;}
+.fnlist{border-top:1px solid var(--color-ink);}
+.fnrow{display:flex;align-items:baseline;gap:14px;padding:9px 14px;border-bottom:1px solid var(--color-field);
+  cursor:pointer;border-radius:var(--radius);transition:background .18s ease,color .18s ease;}
+.fnrow:hover{background:#f0efec;}
+.fnrow .fnum{font-size:13px;color:var(--color-graphite);width:2.5ch;flex:none;}
+.fnrow .fzh{font-family:var(--font-serif);font-size:clamp(20px,2vw,26px);line-height:1;flex:none;}
+.fnrow .fen{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-ash);flex:none;}
+.fnrow .fdesc{font-size:14px;color:var(--color-ash);margin-left:auto;text-align:right;max-width:42ch;line-height:1.35;}
+.fnrow.sel{background:var(--color-ink);color:var(--color-paper);}
+.fnrow.sel .fnum,.fnrow.sel .fen,.fnrow.sel .fdesc{color:#c9c3b8;}
+.fnrow.sel .fzh:before{content:"✓ ";}
+.weigh-count{font-size:14px;margin-bottom:10px;color:var(--color-ash);}
+.weigh-count b{font-weight:400;color:var(--color-ink);}
+/* generated personalized prompt (paper) */
+.genwrap{border:1px solid var(--color-ink);border-radius:var(--radius);width:100%;overflow:hidden;}
+.genbar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--color-ink);padding:9px 14px;font-size:12px;color:var(--color-ash);}
+.gencopy{font-family:inherit;font-size:12px;background:none;border:1px solid var(--color-ink);border-radius:12px;padding:3px 12px;cursor:pointer;color:var(--color-ink);}
+.gencopy:hover,.gencopy.done{background:var(--color-ink);color:var(--color-paper);}
+.gencopy:disabled{opacity:.3;cursor:default;}
+.gentext{padding:16px;font-size:13.5px;line-height:1.75;white-space:pre-wrap;color:var(--color-ink);max-height:52vh;overflow:auto;}
+.gentext .ph{color:var(--color-graphite);}
+.gentext b{font-weight:400;background:var(--color-ink);color:var(--color-paper);padding:0 4px;border-radius:3px;}
+.gentext .gk{color:var(--color-graphite);}
+
+/* ---------- slide 8: hands-on steps ---------- */
+.handson{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:880px;margin:12px 0 18px;}
+.hstep{border:1px solid var(--color-ink);padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;}
+.hstep .hn{font-size:13px;color:var(--color-graphite);}
+.hstep .ht{font-size:16px;}
+a.btnbox{display:inline-block;text-decoration:none;color:var(--color-ink);border:1px solid var(--color-ink);padding:7px 14px;font-size:14px;margin-top:auto;}
+a.btnbox:hover{background:var(--color-ink);color:var(--color-paper);}
+a.btnbox.dl:before{content:"↓ ";}
+a.btnbox.ext:before{content:"↗ ";}
+
+@media (max-width:900px){
+  .tool-grid,.insight-grid,.handson{grid-template-columns:1fr 1fr;}
+  .stepper{grid-template-columns:1fr;}
+  .weigh-layout{grid-template-columns:1fr;}
+  .weigh-right{position:static;}
+  .step-aside{border-left:none;border-top:1px solid var(--color-ink);padding-left:0;padding-top:16px;}
+  .icard.open{grid-column:span 2;}
+  .hint{display:none;}
+  .cols,.exp-wrap{grid-template-columns:1fr;}
+  .exp-right{border-left:none;border-top:1px solid var(--color-ink);padding-left:0;padding-top:18px;}
+  .edgenav,.localesw{display:none;}
+  .slide{padding:56px 28px 92px;}
+}
+</style>
+</head>
+<body>
+
+<!-- registration bar -->
+<div class="regbar">
+  <div class="mark v">V</div>
+  <div class="mark a">A<span class="up">&#8593;</span></div>
+  <div class="mark c">C</div>
+</div>
+
+<div class="progline" id="progline"></div>
+<nav class="edgenav">好學生筆記 <span>·</span> Workshop</nav>
+<div class="localesw">好學生筆記 · Good Student Notes</div>
+
+<main class="deck" id="deck">
+
+  <!-- 1 — intro -->
+  <section class="slide top" data-title="開場">
+    <div class="watermark">01</div>
+    <div class="kicker"><span class="arrow">↗</span> <span>Opening</span> <span class="num">01 / 12</span></div>
+    <h1 class="display">好學生筆記</h1>
+    <p class="lead">一場關於「怎麼樣才是真的學得到東西」的兩小時工作坊。</p>
+    <p class="body">大家好,我是 <b>江碩濤</b>。我來自<b>中鼎工程</b>,我們是做比較大型的工程顧問開發的公司。今天想把「好學生筆記」這個我自己做的學習專案分享給大家 —— 簡報就是一個連結,裡面所有東西都是<b>開源、可以直接使用</b>的。</p>
+    <div class="tools-head">↗ 明天開始前,請先下載安裝這些工具(點圖卡前往下載)</div>
+    <div class="tool-grid">
+      <a class="toolcard" href="https://antigravity.google/download" target="_blank" rel="noopener">
+        <span class="ic">▲</span><span class="tname">Antigravity IDE</span>
+        <span class="tdesc">Google 的 agentic IDE(mac / win / linux)</span><span class="dl">下載</span>
+      </a>
+      <a class="toolcard" href="https://obsidian.md/download" target="_blank" rel="noopener">
+        <span class="ic">◆</span><span class="tname">Obsidian</span>
+        <span class="tdesc">桌面知識庫,沉澱你的學習日記</span><span class="dl">下載</span>
+      </a>
+      <a class="toolcard" href="https://gemini.google.com/app" target="_blank" rel="noopener">
+        <span class="ic">✦</span><span class="tname">Gemini App(手機)</span>
+        <span class="tdesc">App Store / Play 商店,手機就能動手做 GEM</span><span class="dl">下載</span>
+      </a>
+      <a class="toolcard" href="https://docs.anthropic.com/en/docs/claude-code" target="_blank" rel="noopener">
+        <span class="ic">❯_</span><span class="tname">Claude Code / Codex CLI</span>
+        <span class="tdesc">終端機 CLI 工具(進階,可後裝)</span><span class="dl">安裝指引</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 2 — what is real learning -->
+  <section class="slide" data-title="學習的課題">
+    <div class="watermark">02</div>
+    <div class="kicker"><span class="arrow">↗</span> <span>The Question</span> <span class="num">02 / 12</span></div>
+    <h2 class="display">怎麼樣才是<br>真的學得到東西?</h2>
+    <p class="body">學習本身需要的是<b>練習</b>,或是<b>重複的形式刺激</b>。</p>
+    <p class="body">而現在大部分人使用 AI 的方式,其實停在「<b>挑選</b>」—— 挑選學習的材料、挑選要學的方向。大多數人缺的,是<b>選定之後,該怎麼用 AI 真的把它學會</b>。</p>
+    <div class="note"><span class="tag">這正是好學生筆記的第一個想法 —</span><br>當我已經確定我想學「這個知識」的時候,我應該怎麼去學,才能夠<b>真的學會</b>?</div>
+  </section>
+
+  <!-- 3 — experience: audio + transcript -->
+  <section class="slide" data-title="體驗:聲音 vs 文字">
+    <div class="kicker"><span class="arrow">↗</span> <span>Experience · 3 min</span> <span class="num">03 / 12</span></div>
+    <div class="exp-wrap">
+      <div class="exp-left">
+        <h2 class="display">聲音 vs 文字</h2>
+        <p class="lead">同一段三分鐘閃講,右側逐字稿跟著聲音走。請同時感受兩種輸入。</p>
+        <div class="player">
+          <div class="ptitle">閃講 / Lightning Talk<span class="muted">江碩濤 — 好學生筆記</span></div>
+          <audio id="lt-audio" controls preload="metadata" src="../lightalking.mp3"></audio>
+          <div class="tip">聲音<b>有表情</b> —— 它會提醒你該注意哪裡、讓你對關鍵字產生興趣。<br>文字<b>好閱讀</b> —— 你能看到深度,而讀完文字往往比聽完一場演講更省時間。</div>
+        </div>
+      </div>
+      <div class="exp-right">
+        <div class="tx-head"><span>逐字稿(完整保留,不一句一句閃)</span><span id="tx-time">00:00</span></div>
+        <div class="transcript" id="transcript"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — taking notes / chewing -->
+  <section class="slide" data-title="做筆記:咀嚼">
+    <div class="watermark">04</div>
+    <div class="kicker"><span class="arrow">↗</span> <span>Note-taking</span> <span class="num">04 / 12</span></div>
+    <h2 class="display">學習是對內容<br>咀嚼的過程</h2>
+    <p class="body">聽講時,大腦會去<b>抽取關鍵字</b>,再對關鍵字進行解讀與思考。我們習慣用<b>個人的經驗或背景</b>,去和有興趣或難理解的字句重新賦予意義來討論。</p>
+    <div class="note"><span class="tag">最好的例子:傻瓜單字記憶法</span><br>義大利文 <b>arrivederci</b>(再見)→ 諧音「<b>阿哩誒壓死</b>」(台語:啊你會被壓死……)。<br>一旦把陌生的字綁進你自己的語境,它就馬上記住了。</div>
+    <p class="body muted">這就是「在原稿上做筆記」的本質 —— 把新知識接到你既有的理解上。</p>
+  </section>
+
+  <!-- 5 — workshop purpose / mindset -->
+  <section class="slide top" data-title="心法先於工具">
+    <div class="watermark">05</div>
+    <div class="kicker"><span class="arrow">↗</span> <span>Mindset</span> <span class="num">05 / 12</span></div>
+    <h2 class="display">先聊「心法」,<br>再動手用任何 AI Agent</h2>
+    <p class="lead">今天提供的是:我在學習上的想法 + 我怎麼用 AI 去達到它。為什麼一定要「拆解」?跟著走一遍 ——</p>
+    <div class="stepper">
+      <div>
+        <div class="step-rail" id="stepRail"></div>
+        <div class="step-body" id="stepBody"></div>
+        <div class="stepnav">
+          <button id="stepPrev">← 上一拍</button>
+          <button id="stepNext">下一拍 →</button>
+        </div>
+      </div>
+      <div class="step-aside" id="stepAside"></div>
+    </div>
+  </section>
+
+  <!-- 6 — birth of the method (Physics of Insight, dark chapter) -->
+  <section class="slide top dark" data-title="好學生筆記的誕生">
+    <div class="kicker"><span class="arrow">↗</span> <span>06 / 12 · Origin</span></div>
+    <div class="poi-masthead stamp">Physics of Insight</div>
+    <div class="poi-sub">好學生筆記是什麼、怎麼誕生的</div>
+    <p class="poi-intro">從去年連續兩個月的<b>東大松尾研 LLM 課程</b>開始 —— 我發現「在原稿上做筆記」與「另開一頁做摘要」是<b>完全不同的物種</b>。於是長出這套「洞見的物理學」:11 組對立,每組各有它的 HOW 與 Technique。</p>
+    <div class="insight-grid" id="insightGrid6"></div>
+    <p class="poi-tip">↗ 點任一張卡,展開它的 HOW(怎麼做)與 Technique(技巧)。</p>
+    <div class="manifesto" id="manifesto"></div>
+  </section>
+
+  <!-- 7 — PAPER broadside: weight your detail → personalized prompt (no cards) -->
+  <section class="slide top" data-title="今年的 AI 躍進">
+    <div class="kicker"><span class="arrow">↗</span> <span>07 / 12 · Weight Your Detail</span></div>
+    <h2 class="display">同樣的功能,<br>怎麼變成「你的」?</h2>
+    <p class="lead">今年 AI 在語言銜接與語意國情切換上突破很大,這些功能大家都拿得到。差別在<b>權重</b> —— 點選功能,右側即時長出可貼進 8/12 GEM Prompt 的<b>個人化權重區塊</b>。</p>
+    <div class="weigh-layout">
+      <div class="weigh-left">
+        <div class="fn-eyebrow">— 選擇你要賦予權重的功能 —</div>
+        <div class="fnlist" id="fnList"></div>
+      </div>
+      <div class="weigh-right">
+        <div class="weigh-count" id="weighCount">已選 <b>0</b> 項 —— 還沒賦予權重。</div>
+        <div class="genwrap">
+          <div class="genbar"><span>↗ 個人化權重區塊 — 複製貼到 8/12</span>
+            <button class="gencopy" id="genCopy" disabled>複製</button></div>
+          <div class="gentext" id="genText"><span class="ph">← 點選左側你最重視的功能(含技巧),這裡會即時長出可貼進 GEM 的【個人化權重】區塊。</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 — Gemini GEM copyable prompt -->
+  <section class="slide top" data-title="體驗版 GEM Prompt">
+    <div class="kicker"><span class="arrow">↗</span> <span>Hands-on · Gemini Gem</span> <span class="num">08 / 12</span></div>
+    <h2 class="display" style="margin-bottom:14px;">在 Gemini Pro 的 GEM 做一個體驗版</h2>
+    <div class="handson">
+      <div class="hstep">
+        <span class="hn">Step 1</span><span class="ht">下載閃講音檔當素材</span>
+        <a class="btnbox dl" href="../lightalking.mp3" download>lightalking.mp3</a>
+      </div>
+      <div class="hstep">
+        <span class="hn">Step 2</span><span class="ht">開 Gemini Pro 建一個新 GEM</span>
+        <a class="btnbox ext" href="https://gemini.google.com/gems/create" target="_blank" rel="noopener">建立 GEM</a>
+      </div>
+      <div class="hstep">
+        <span class="hn">Step 3</span><span class="ht">貼上右下方 Prompt 當系統指令</span>
+        <a class="btnbox" href="#" onclick="copyPrompt();return false;">複製 Prompt</a>
+      </div>
+    </div>
+    <p class="body" style="margin-bottom:8px;">把整段 Prompt 貼進 Gem 當系統指令,再丟入音檔逐字稿,就能跑 Step 1–5 的好學生筆記流程。<br><b>進階:</b>把 7/12 產生的「個人化權重」貼進 Prompt 裡的「# 個人化權重」虛線區塊,成果就會依你的權重加重 —— 之後每次處理都自動套用。</p>
+    <div class="codewrap">
+      <div class="codebar"><span class="muted">好學生筆記生成秘書 · system prompt</span>
+        <button class="copybtn" id="copybtn" onclick="copyPrompt()">複製 Prompt</button>
+      </div>
+      <pre class="code" id="gemPrompt"># 角色與任務
+你是一個「好學生筆記」生成秘書。你的任務是引導使用者,將原始逐字稿依序執行 Step 1 到 Step 5。你必須讓最終產出具備極高的「可讀性」與「視覺排版效果」,採用圖文分離的「提案三」架構,並在最後一個步驟主動為使用者生成 Google Docs 文件與視覺插圖,達成一條龍的結案體驗。
+
+# 個人化權重(把 7/12 產生的【個人化權重】區塊貼在這條虛線之間 ↓)
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+【個人化權重】(尚未貼上 —— 預設所有功能平均處理)
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+規則:若上面列出了功能,請在對應的 Step 2–4「特別加重」執行那幾項,並確實套用各自的「技巧」;沒列到的維持預設。
+
+# 互動工作流
+每次只執行一個步驟,並等待使用者確認後,才進入下一步。
+- 【輸入階段】:請使用者提供 raw 逐字稿、校正提示,以及「目標職業/身份立場」(例如:花藝師、牙醫師)。
+- 【Step 2 (校稿)】:進行標點與分段校稿,精簡並保留精華。
+- 【Step 3 (補充)】:在首次提及的術語後加入專業知識補充。
+- 【Step 4 (圖文筆記草稿)】:產出最終版優化筆記(套用目標立場類比),並在段落間「附上圖片生成指令 (Prompt)」,在此階段先不生成圖片。
+- 【Step 5 (文件與生圖結案)】:使用工具直接生成 Step 4 提到的所有圖片,同時透過工具建立一份完整的 Google Docs 文件,並引導使用者自行將圖片貼入文件中。
+
+---
+
+# 視覺排版規範(核心)
+為了呈現手寫筆記的「標註感」,請使用以下 Markdown 語意排版:
+
+1. **六色筆記標註(以 Emoji 模擬)**:
+   - 🔵 **[關鍵字圈選]**:在關鍵術語兩旁加 🔵。例如:🔵**Claude Code**🔵。
+   - 🟡 **[螢光筆重點]**:在重要句子前後加 🟡。例如:🟡這是核心重點🟡。
+   - 🔴 **[疑問與驚嘆]**:在疑問句旁加 🔴❓,在洞察旁加 🔴❗️。
+   - 🟠 **[橘色便利貼]** 與 🟢 **[綠色便利貼]**:用於立場類比與補充。
+
+2. **區塊排版**:
+   - 專業知識補充(Step 3)一律使用標準 Markdown 引言區塊 `> `,並以 📖 開頭。
+   - 立場視角類比(Step 4)一律使用引言區塊 `> `,並以 🎯 開頭。
+
+---
+
+# Step 4 局部微型插圖提示機制
+在 Step 4 的筆記中,每當出現一個「立場類比」時,請在該段落下方,為使用者提供一個「🎨 影像生成指令」。
+請在 Step 4 的結尾告知使用者:『確認筆記內容與排版無誤後,請告訴我進入 Step 5,我將為您一口氣生成這些圖片並建立 Google Docs 文件!』
+
+### 🎨 局部插圖 Prompt 範本(由你自動依立場生成):
+「一張極簡高質感的局部特寫照片。背景是乾淨的木質桌面。畫面上有一張 {橘色或綠色} 的手寫便利貼,上面用工整的繁體中文黑色手寫字寫著:『{類比的核心關鍵字}』。便利貼旁隨意疊放著一個 {符合立場的精緻物件,如牙醫口鏡、花剪等}。柔和的自然光,豐富的細節與真實材質感。」
+
+---
+
+# Step 5 文件與插圖生成機制(結案階段)
+當使用者指示進入 Step 5 時,你必須「同時」執行以下三項任務來完成結案:
+
+1. **生成所有圖片**:根據 Step 4 規劃的所有 Prompt,直接呼叫生圖工具,一次性生成所有對應的插圖。
+2. **建立 Google Docs 文件**:使用建立文件的工具(如 Google Workspace 擴充功能),將 Step 4 的完整筆記文字(包含排版、補充與立場類比)寫入一份全新的 Google Docs 中。請在文件最下方建立一個「🎨 視覺化意象統整表」的空位。
+3. **結案引導說明**:在回覆中提供生成好的 Google Docs 連結與所有的 AI 圖片,並向使用者說明:
+   > 「🎉 文件與圖片皆已準備完畢!
+   > 受限於系統權限,我無法直接將圖片塞入文件中。請您點擊上方連結打開 Google Docs,並將這裡生成的圖片直接『複製貼上』到文件末尾的統整表空位中,即可完成您的專屬圖文筆記!」
+
+# 最終網頁版筆記結構範本(以牙醫師為例)
+> 📝 **學習摘要**
+> - **核心主題**:利用...
+> - **牙醫師關鍵收穫**:1... 2...
+
+## 開場:我是XXX
+大家好,我是XXX。我來自OOO... 🔵**Claude Code**🔵 是一個好用的工具...
+
+> 📖 **專業知識補充:Claude Code**
+> 這是由 Anthropic 開發的指令列工具...
+
+> 🎯 **牙醫師視角**
+> 🔵**Claude Code**🔵 就像是一把高精度的牙科手機(Handpiece),能精準快速地下鑽</pre>
+    </div>
+  </section>
+
+  <!-- 9 — results / google docs -->
+  <section class="slide" data-title="成果:Google Docs">
+    <div class="watermark">09</div>
+    <div class="kicker"><span class="arrow">↗</span> <span>Result</span> <span class="num">09 / 12</span></div>
+    <h2 class="display">成果展示</h2>
+    <p class="lead">最後落地的形式,是一份可分享、可協作的 Google Docs 圖文筆記。</p>
+    <div class="note"><span class="tag">📝 學習摘要(實際產出範例)</span><br>核心主題:用 Claude code 與大型語言模型,建立「在原稿上做筆記」的學習工作流,而不是只產生摘要。</div>
+    <div class="note"><span class="tag">🎯 好學生視角</span><br>真正的筆記不是替代原文,而是在原稿旁留下理解、提問、複習線索與下一步行動。</div>
+    <p class="body muted">圖文分離:文字進 Google Docs,六色標註與局部插圖再貼回統整表 —— 一條龍結案。</p>
+  </section>
+
+  <!-- 10 — advanced / obsidian / karpathy -->
+  <section class="slide top" data-title="進階與自動化">
+    <div class="watermark">10</div>
+    <div class="kicker"><span class="arrow">↗</span> <span>Advanced · Automation</span> <span class="num">10 / 12</span></div>
+    <h2 class="display">進階與自動化:<br>蒐集並強化你的學習</h2>
+    <ul class="list">
+      <li><b>工具統計</b> —— 現場盤點大家用的:Claude Code、Codex CLI,或 IDE(安裝 Antigravity IDE)。</li>
+      <li><b>Karpathy gist wiki LLM framework</b> —— 直接要求 AI 照著做。<a class="refit" href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">karpathy/442a6bf… gist</a></li>
+      <li><b>raw 好學生筆記範本 + ingest</b> → 產生 wiki。</li>
+      <li>進入 wiki,做 <b>Obsidian</b> 的編輯與基本操作。</li>
+      <li><b>Query 練習</b> —— 問問題、編輯、情境思考,回到 CLI / IDE 問,產生更新的 .md,再次進入重新編輯。</li>
+    </ul>
+  </section>
+
+  <!-- 11 — obsidian practice -->
+  <section class="slide" data-title="Obsidian 實作">
+    <div class="watermark">11</div>
+    <div class="kicker"><span class="arrow">↗</span> <span>Practice</span> <span class="num">11 / 12</span></div>
+    <h2 class="display">Obsidian 產出:<br>我的學習日記實作</h2>
+    <p class="body">把好學生筆記沉澱進 Obsidian,讓每一次 query → 更新 → 重新編輯,都累積成一本會長大的學習日記。</p>
+    <div class="note"><span class="tag">循環</span><br>原稿 → 筆記 → wiki → query → 回 CLI/IDE 更新 → 重新編輯 → 增厚。每一圈,理解都更深一層。</div>
+  </section>
+
+  <!-- 12 — closing: inverted editorial letter -->
+  <section class="slide dark letter" data-title="展示與分享">
+    <div class="letter-eyebrow">A Letter From The Work Desk · 結語</div>
+    <div class="letter-body">這個世界已經有太多東西在替你做摘要。<br><br>好學生筆記只做一件相反的事:把講者那一整週準備過、現場想過、停頓過的,<em>原樣留下來</em>。<br><br>我什麼時候會成為學生?在時間有限下,語言模型能不能給我們一種全新的學習體驗?</div>
+    <div class="letter-foot">謝謝大家 — 一週內,你會收到一份屬於你自己的好學生筆記</div>
+  </section>
+
+</main>
+
+<!-- footer / controls -->
+<div class="foot"></div>
+<div class="navbtns">
+  <button id="prev" aria-label="prev">&#8592;</button>
+  <button id="next" aria-label="next">&#8594;</button>
+</div>
+<div class="counter"><span id="cur">01</span><span class="muted"> / 12</span></div>
+<div class="hint">← → 翻頁 · 數字鍵跳頁</div>
+
+<script>
+/* ---------------- transcript timing (parsed from transcript.srt) ---------------- */
+const CUES = [
+ [0.0,"大家好,我是江碩濤。"],
+ [4.0,"因為今天的場子,我是來自中鼎工程,我們是在做比較大型的工程顧問開發的公司。"],
+ [14.0,"我想在 Claude code 的應用上面,今天想要把這個好學生筆記分享給大家,這是我自己做的一個學習的專案。"],
+ [22.0,"想把這個分享給大家。同學只要把這個簡報連結點開,它就是一個連結,未來所有裡面的東西都是開源,可以直接使用的。"],
+ [31.0,"這樣子的一個工具的使用上面,其實我把它分成四個大項目來跟大家討論。"],
+ [38.0,"因為從剛剛 Hana 的簡報以及前面很多三講的三位四位的好朋友,他們都有提到,就是在 Claude code 的應用上面,或者是大型語言模型的應用上面,"],
+ [51.0,"在去年開始就有所謂的 tool use 的部分。這個東西就是要麻煩兩位老師在未來跟同學之間互動。"],
+ [60.0,"我覺得 Git 是一個很重要的入門磚。也就是說,所有的開源的東西,我們要讓同學知道不要一股腦去做輪子,"],
+ [70.0,"反而是要如何在 Git 上面去拿到別人,站在巨人的肩膀上面去找到輪子。"],
+ [76.0,"那像剛剛 Hana 也有提到一些 skill 的應用上面呢,那我們如何去篩選好的 skill 呢?"],
+ [82.5,"其實是從 Git 上面被 fork 以及被 star 的數量,然後去找到更好的資源,"],
+ [89.239,"然後透過 Claude 裡面有一個叫做 plan mode 的方式,你可以在它的按 shift 的部分去做切換。Claude 在做所謂的計劃行為上面,它是一個相當有優勢的前端工具,可在 tool use 上使用。"],
+ [109.233,"第二是大語言模型,能夠做文字拼接。"],
+ [114.993,"我相信大家在這兩三年的應用上已經非常有心得了。"],
+ [120.433,"再來就是 agent,所有同學在使用東西中會去把工作做切分。"],
+ [126.593,"善用 agent 以及善用所謂的 co-work,是一個很重要的工具的做法。"],
+ [132.593,"那如果你有到簡報裡面,你可以去點右邊這個開源的小工具。"],
+ [137.093,"我們所謂在把好學生筆記上面,當中的「筆記」其實在談的事情呢,是快速地去簡化以及去做摘要。"],
+ [145.394,"而這個筆記最大的不一樣是,它去做完整的逐字稿的拼接。"],
+ [149.593,"也就是像我們今天剛剛有三場的簡報,我認為每一個人的簡報裡面每一個字都是精華。"],
+ [155.593,"甚至我對每一個人的頓點,都應該要被記錄下來。"],
+ [159.633,"好學生筆記它會透過這樣子的一個做法,去把所有的東西做一個完整的記錄。"],
+ [165.433,"大家可以回去試試看,上面有一個很好的做法。"],
+ [168.433,"那我想說提供給同學們,或者是在用 Claude code 的人的一種經驗上面分享,就是第一個,善用終端機。"],
+ [176.033,"因為終端機是一個唯一可以讓你進入到你的電腦裡面去做事的一個工具。"],
+ [180.753,"第二個就是學會分解你的任務。"],
+ [182.834,"很多人都在學 prompt engineer,但是我建議的做法有點像剛剛有台下的朋友提出的,用錄音的方式。但你用錄音的方式來跟你的同學做對話的時候,你在跟人的對話裡面就是最好的 prompt。"],
+ [197.834,"這就是我給大家最好的建議。就這樣,以上這兩個會有特別的訣竅。謝謝。"]
+];
+
+/* ---------------- deck navigation ---------------- */
+const slides=[...document.querySelectorAll('.slide')];
+const N=slides.length;
+let idx=0;
+const progline=document.getElementById('progline');
+const curEl=document.getElementById('cur');
+const audio=document.getElementById('lt-audio');
+
+function go(n){
+  n=Math.max(0,Math.min(N-1,n));
+  if(n===idx && slides[idx].classList.contains('active'))return;
+  slides[idx].classList.remove('active');
+  idx=n;
+  slides[idx].classList.add('active');
+  progline.style.width=((idx+1)/N*100)+'%';
+  document.body.classList.toggle('dark-mode',slides[idx].classList.contains('dark'));
+  curEl.textContent=String(idx+1).padStart(2,'0');
+  document.getElementById('prev').disabled=idx===0;
+  document.getElementById('next').disabled=idx===N-1;
+  // pause audio when leaving experience slide
+  if(slides[idx].dataset.title!=="體驗:聲音 vs 文字" && audio && !audio.paused){audio.pause();}
+}
+document.getElementById('next').onclick=()=>go(idx+1);
+document.getElementById('prev').onclick=()=>go(idx-1);
+
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='AUDIO')return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(idx+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);}
+  else if(e.key>='1'&&e.key<='9'){go(parseInt(e.key)-1);}
+  else if(e.key==='0'){go(9);}
+  else if(e.key==='Home'){go(0);}
+  else if(e.key==='End'){go(N-1);}
+});
+go(0);
+
+/* ---------------- GENAI "Physics of Insight" — verbatim text + HOW + Technique ----------------
+   text = 主張(原文) · how = HOW(原文) · tech = Technique(原文)
+   short / dir = 用於 7/12 即時生成的個人化指令 ---------------- */
+const INSIGHTS=[
+ {n:"01",zh:"我選擇的學習",en:"Compression vs. Restoration",
+  text:"大多數人要求 AI 摘要,把牛排打成肉泥。我要求 AI 縫合,還原語氣與靈魂。",
+  how:"利用 Entropy Control 刻意抑制 LLM 的「過度泛化」天性,強制保留原始語音中的碎形與顆粒感。",
+  tech:"High-Temperature Sampling & Zero-Edit Verbatim Constraint",
+  short:"還原 Restoration",dir:"保留原始語氣與靈魂,逐字還原,絕不把內容摘要成肉泥。"},
+ {n:"02",zh:"成功譯本的精神",en:"Translation vs. Localization",
+  text:"直譯是充滿摩擦力的異物。轉譯是為了讓大腦直接處理邏輯,而非語言障礙。",
+  how:"校準語言模型的人格權重,避開日文直譯的委婉,映射至台灣文化的直爽性格。",
+  tech:"Socio-Linguistic Alignment & Persona-Driven Transcreation",
+  short:"轉譯 Localization",dir:"把外語的委婉轉譯成我文化裡直覺好懂的說法,降低語言摩擦。"},
+ {n:"03",zh:"知識無損降維",en:"Complexity vs. Distillation",
+  text:"學術的完整表達是複雜的形狀。將其還原到本質的構成關係,知識才能開始流動。",
+  how:"執行多階層知識蒸餾,將學術論文的複雜表達,還原為構成概念的本質關係。",
+  tech:"Lossless Knowledge Distillation & Volume Integrity Check",
+  short:"無損降維 Distillation",dir:"把複雜的學術表達降維成本質的構成關係,但不遺失資訊量。"},
+ {n:"04",zh:"填補認知缺口",en:"Fluff vs. Annotation",
+  text:"不是為了增加篇幅的廢話。而是針對盲點的精確手術註解。",
+  how:"投影專業領域圖譜(如建築設計),將抽象代碼邏輯掛載至使用者熟悉的實體 Schema 中。",
+  tech:"Domain-Specific Schema Projection & Cross-Domain Analogy Synthesis",
+  short:"精確註解 Annotation",dir:"在我的盲點處補上精確註解,並用我熟悉的領域 Schema 來類比。"},
+ {n:"05",zh:"時間投資回報",en:"Speed vs. Retention",
+  text:"用『好讀』換取速度,用『網狀連結』換取留存。遺忘是對投入時間的最大背叛。",
+  how:"利用高關聯性的脈絡重組,將單次閱讀的線性速度,轉化為可被長期提取的網狀記憶資產。",
+  tech:"Cognitive Friction Reduction & Networked Input/Output Loop",
+  short:"網狀留存 Retention",dir:"用好讀換速度、用網狀連結換留存,讓我之後能反覆提取。"},
+ {n:"06",zh:"外接大腦策展",en:"Hoarding vs. Curation",
+  text:"收藏是堆積未分類的數位垃圾。策展是用視覺錨點,精準索引大腦的記憶區塊。",
+  how:"利用多模態 AI 讀取關鍵影格,將前後文逐字稿綁定為圖片描述,實現自動化的圖文對位插入。",
+  tech:"Multimodal Context Binding & Visual Memory Indexing",
+  short:"視覺策展 Curation",dir:"用視覺錨點(關鍵影格+圖說)精準索引重點,方便日後回憶。"},
+ {n:"07",zh:"人機共舞協作",en:"Outsourcing vs. Partnership",
+  text:"外包是期待奇蹟的懶惰。協作是精準調度專才的將帥之道。",
+  how:"將 01-06 定義為獨立的 Agent 功能模組,人類轉型為系統架構師,負責流程編排與關鍵節點的品質驗收 (QA/QC)。",
+  tech:"Agent Orchestration & Human-in-the-Loop Protocol (MCP)",
+  short:"人機協作 Partnership",dir:"把流程拆成可調度的模組,並在關鍵節點停下來讓我做品質驗收。"},
+ {n:"08",zh:"磨練 vs. 心流",en:"Grind vs. Flow",
+  text:"磨練是為了生存,心流是為了創造。消除摩擦力,讓大腦在純粹的思考中從滑行到飛翔。",
+  how:"將重複性勞動(格)交給自動化腳本,將認知頻寬(流)保留給高價值的洞察與連結。",
+  tech:"Frictionless Automation & Cognitive Offloading",
+  short:"心流 Flow",dir:"把重複勞動自動化,把我的認知頻寬留給高價值的洞察。"},
+ {n:"09",zh:"孤島 vs. 連結",en:"Isolation vs. Connection",
+  text:"孤島是死知識的墳場。連結是新洞察的溫床。",
+  how:"不再依賴資料夾分類,而是利用 Vector Embeddings 找出知識間的「語義距離」,自動建立跨時空的意外連結。",
+  tech:"Vector Embeddings & Semantic Knowledge Graph",
+  short:"連結 Connection",dir:"主動找出這份內容與我其他筆記的語義連結,別讓它變成孤島。"},
+ {n:"10",zh:"擁有 vs. 成為",en:"Shortcut vs. Leverage",
+  text:"你擁有的知識會過期。你成為的人格是永恆。",
+  how:"知識不再是外掛硬碟,而是內化為直覺。通過大量高品質的輸入與輸出迴圈,改寫你的決策模型。",
+  tech:"Model Fine-Tuning & Identity Integration",
+  short:"成為 Leverage",dir:"讓知識內化成我的直覺與判斷,而不只是存起來的資料。"},
+ {n:"11",zh:"連結的橋樑",en:"The Bridge",
+  text:"左岸是東大松尾研,右岸是我的大腦。這套流程,就是連結兩端的橋樑。",
+  how:"",tech:"",
+  short:"橋樑 The Bridge",dir:"把這份外部教材,接到我大腦既有的理解上,成為連結兩端的橋樑。"}
+];
+
+function makeCard(d){
+  const el=document.createElement('div');
+  el.className='icard';
+  let h='<img class="ithumb" src="assets/physics/'+d.n+'.png" alt="'+d.zh+'" loading="lazy">';
+  h+='<div class="ipad"><span class="inum">'+d.n+' / 11</span>'
+    +'<span class="izh">'+d.zh+'</span><span class="ien">'+d.en+'</span>'
+    +'<span class="istate">'+d.text+'</span>';
+  if(d.how||d.tech){
+    h+='<div class="htbox">';
+    if(d.how)h+='<div class="hrow"><span class="hlab">HOW</span>'+d.how+'</div>';
+    if(d.tech)h+='<div class="hrow"><span class="hlab">TECH</span>'+d.tech+'</div>';
+    h+='</div>';
+  }
+  h+='</div>';
+  el.innerHTML=h;
+  return el;
+}
+
+/* slide 6 — expandable gallery */
+const grid6=document.getElementById('insightGrid6');
+INSIGHTS.forEach(d=>{
+  const el=makeCard(d);
+  el.onclick=()=>{
+    const wasOpen=el.classList.contains('open');
+    grid6.querySelectorAll('.icard.open').forEach(c=>c.classList.remove('open'));
+    if(!wasOpen){el.classList.add('open');el.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  };
+  grid6.appendChild(el);
+});
+document.getElementById('manifesto').innerHTML=
+  '結語〈放大的藝術〉:遇到真正有料的分享,就<b>不計一切代價把字字句句收藏起來</b>,再跟你腦袋能吸收的每個「接面」對接 —— 並有意識地理解:<b>省掉的每一個字元,都伴隨著一份惋惜。</b>';
+
+/* slide 7 — function selection list (no cards) → live personalized prompt */
+const fnList=document.getElementById('fnList');
+const weighCount=document.getElementById('weighCount');
+const genText=document.getElementById('genText');
+const genCopy=document.getElementById('genCopy');
+const picked=new Set();
+function buildPrompt(){
+  const chosen=INSIGHTS.filter(d=>picked.has(d.n));
+  if(!chosen.length){
+    genText.innerHTML='<span class="ph">← 先從上方點選你最重視的功能,我會把它們(連同技巧)寫成一段給 AI 的指令。</span>';
+    genCopy.disabled=true;return;
+  }
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const head="【個人化權重】(學員挑選 "+chosen.length+" 項;處理逐字稿時請在對應步驟特別加重,並套用其技巧):";
+  const tail="(把這整段貼回 8/12 GEM Prompt 的「# 個人化權重」虛線區塊;之後每次處理逐字稿都會自動套用。)";
+  let plain=head+"\n",html=esc(head)+"\n";
+  chosen.forEach((d,i)=>{
+    plain+="\n"+(i+1)+".〔"+d.short+"〕"+d.dir;
+    html+="\n"+(i+1)+".<b>〔"+esc(d.short)+"〕</b>"+esc(d.dir);
+    if(d.tech){plain+="\n   技巧:"+d.tech;html+='\n   <span class="gk">技巧:'+esc(d.tech)+'</span>';}
+  });
+  plain+="\n\n"+tail;html+='\n\n<span class="gk">'+esc(tail)+'</span>';
+  genText.innerHTML=html;
+  genText._plain=plain;
+  genCopy.disabled=false;
+}
+INSIGHTS.forEach(d=>{
+  const row=document.createElement('div');
+  row.className='fnrow';
+  row.innerHTML='<span class="fnum">'+d.n+'</span><span class="fzh">'+d.short.split(' ')[0]+'</span>'
+    +'<span class="fen">'+d.en+'</span><span class="fdesc">'+d.dir+'</span>';
+  row.onclick=()=>{
+    if(picked.has(d.n)){picked.delete(d.n);row.classList.remove('sel');}
+    else{picked.add(d.n);row.classList.add('sel');}
+    weighCount.innerHTML=picked.size>0
+      ?'已選 <b>'+picked.size+'</b> 項 —— 這就是你的個人化權重。'
+      :'已選 <b>0</b> 項 —— 還沒賦予權重。';
+    buildPrompt();
+  };
+  fnList.appendChild(row);
+});
+genCopy.onclick=()=>copyText(genText._plain||genText.textContent,genCopy);
+
+/* ---------------- slide 5 — mindset stepper ---------------- */
+const STEPS=[
+ {tag:"許願 · One-shot",
+  body:"大家都在跟 AI 許願。注意:許願要講<b>它聽得懂的功能</b>,而不是它沒看過的名字。複製這句貼給 AI,看它 one-shot 給你什麼 ——",
+  prompt:"幫我做一個小工具:輸入一段演講錄音的逐字稿,輸出一份方便我日後複習的學習筆記。請直接幫我做出來。",
+  pair:"講功能 → AI 能 one-shot 出 60–80 分"},
+ {tag:"破綻 · 每個人都一樣",
+  body:"問題來了:這個願誰許都一樣,AI 給的也幾乎一樣 —— 一個通用的摘要器。它禁不起交付,也<b>還不是「你的」</b>。我們真正想要的,是讓<b>每個同學做出來的都不一樣</b>。",
+  pair:"通用許願 → 大家長一樣、不是你的"},
+ {tag:"拆解 · 想想怎麼拆",
+  body:"要讓每個人都不同,先想清楚步驟:這個工具吃什麼<b>輸入</b>(你的素材)?每一步的<b>產出</b>能不能餵給下一步?哪一步要注入「你」—— 你的身份、立場、最在意的重點?(這正是第 6、7 頁那 11 條原則在做的事。)",
+  pair:"拆解 + 注入你的細節 → 你的專屬版本"},
+ {tag:"要求拆解 · 叫 AI 先拆",
+  body:"不會拆?把「拆解」也交給 AI。複製這句先讓它規劃、別急著動手(這就是 plan mode 的精神)——",
+  prompt:"先不要動手。請把「把演講逐字稿變成一份個人化的複習筆記」這個任務,拆解成 3–5 個步驟,每一步寫清楚輸入與產出,並確認上一步的產出能成為下一步的輸入。其中要有一步,是注入我的身份、立場與最在意的重點。等我確認後,再開始做。",
+  pair:"不會拆 → 就叫 AI 先拆、再做"}
+];
+let sIdx=0;
+const sRail=document.getElementById('stepRail');
+const sBody=document.getElementById('stepBody');
+const sAside=document.getElementById('stepAside');
+STEPS.forEach((s,i)=>{
+  const b=document.createElement('button');b.textContent=(i+1);b.onclick=()=>sGo(i);sRail.appendChild(b);
+});
+const sRailBtns=[...sRail.children];
+function sGo(i){
+  sIdx=Math.max(0,Math.min(STEPS.length-1,i));
+  const s=STEPS[sIdx];
+  sRailBtns.forEach((b,k)=>b.classList.toggle('on',k===sIdx));
+  let html='<div class="sno">第 '+(sIdx+1)+' 拍 / 共 '+STEPS.length+'</div><h3>'+s.tag+'</h3><p>'+s.body+'</p>';
+  if(s.prompt){
+    html+='<div class="spbox"><div class="spbar"><span>↗ 複製這段「'+(sIdx===0?'許願':'拆解')+'」prompt</span>'
+      +'<button class="spcopy" data-p="'+sIdx+'">複製</button></div>'
+      +'<div class="sptext">'+s.prompt+'</div></div>';
+  }
+  sBody.innerHTML=html;
+  const cb=sBody.querySelector('.spcopy');
+  if(cb)cb.onclick=()=>copyText(s.prompt,cb);
+  sAside.innerHTML='<div class="lab">心法對照</div><div class="pair">'+s.pair+'</div>';
+  document.getElementById('stepPrev').disabled=sIdx===0;
+  document.getElementById('stepNext').disabled=sIdx===STEPS.length-1;
+}
+document.getElementById('stepPrev').onclick=()=>sGo(sIdx-1);
+document.getElementById('stepNext').onclick=()=>sGo(sIdx+1);
+sGo(0);
+
+/* generic copy helper */
+function copyText(txt,btn){
+  const done=()=>{const o=btn.textContent;btn.textContent='已複製 ✓';btn.classList.add('done');setTimeout(()=>{btn.textContent=o;btn.classList.remove('done');},1600);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(()=>{fallbackCopy(txt);done();});}
+  else{fallbackCopy(txt);done();}
+}
+function fallbackCopy(txt){const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);}
+
+/* ---------------- build transcript ---------------- */
+const tEl=document.getElementById('transcript');
+CUES.forEach((c,i)=>{
+  const div=document.createElement('div');
+  div.className='cue';div.dataset.start=c[0];div.textContent=c[1];
+  div.onclick=()=>{if(audio){audio.currentTime=c[0];audio.play();}};
+  tEl.appendChild(div);
+});
+const cueEls=[...tEl.children];
+const timeEl=document.getElementById('tx-time');
+function fmt(t){t=Math.max(0,t|0);return String((t/60)|0).padStart(2,'0')+":"+String(t%60).padStart(2,'0');}
+
+function syncTranscript(){
+  if(!audio)return;
+  const t=audio.currentTime;
+  timeEl.textContent=fmt(t);
+  let active=-1;
+  for(let i=0;i<CUES.length;i++){if(t>=CUES[i][0])active=i;else break;}
+  cueEls.forEach((el,i)=>{
+    el.classList.toggle('active',i===active);
+    el.classList.toggle('spoken',i<active);
+  });
+  if(active>=0){
+    const el=cueEls[active];
+    const top=el.offsetTop-tEl.clientHeight/2+el.clientHeight/2;
+    tEl.scrollTo({top,behavior:'smooth'});
+  }
+}
+if(audio){
+  audio.addEventListener('timeupdate',syncTranscript);
+  audio.addEventListener('seeked',syncTranscript);
+}
+
+/* ---------------- copy prompt ---------------- */
+function copyPrompt(){
+  const txt=document.getElementById('gemPrompt').innerText;
+  const btn=document.getElementById('copybtn');
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.textContent='已複製 ✓';btn.classList.add('done');
+    setTimeout(()=>{btn.textContent='複製 Prompt';btn.classList.remove('done');},1800);
+  }).catch(()=>{
+    // fallback
+    const r=document.createRange();r.selectNode(document.getElementById('gemPrompt'));
+    const s=getSelection();s.removeAllRanges();s.addRange(r);
+    try{document.execCommand('copy');btn.textContent='已複製 ✓';}catch(e){btn.textContent='請手動選取';}
+    s.removeAllRanges();
+    setTimeout(()=>{btn.textContent='複製 Prompt';},1800);
+  });
+}
+</script>
+</body>
+</html>
