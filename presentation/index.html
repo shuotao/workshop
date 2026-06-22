@@ -337,10 +337,34 @@ body.dark-mode .navbtns button:hover{background:var(--color-paper);color:var(--c
 .hstep{border:1px solid var(--color-ink);padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;}
 .hstep .hn{font-size:13px;color:var(--color-graphite);}
 .hstep .ht{font-size:16px;}
-a.btnbox{display:inline-block;text-decoration:none;color:var(--color-ink);border:1px solid var(--color-ink);padding:7px 14px;font-size:14px;margin-top:auto;}
+a.btnbox{display:inline-block;text-decoration:none;color:var(--color-ink);border:1px solid var(--color-ink);border-radius:var(--radius);padding:7px 14px;font-size:14px;margin-top:auto;}
 a.btnbox:hover{background:var(--color-ink);color:var(--color-paper);}
 a.btnbox.dl:before{content:"↓ ";}
 a.btnbox.ext:before{content:"↗ ";}
+a.btnbox.home:before{content:"← ";}
+/* ---------- slide 10 — numbered advanced flow ---------- */
+.flow{list-style:none;max-width:920px;margin-top:6px;border-top:1px solid var(--color-ink);}
+.flow>li{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;
+  padding:18px 4px;border-bottom:1px solid var(--color-field);}
+.flow .fnum{font-family:var(--font-serif);font-size:clamp(28px,3vw,40px);line-height:1;color:var(--color-graphite);}
+.flow .ftitle{font-size:18px;margin-bottom:4px;}
+.flow .ftext{font-size:15px;color:var(--color-ash);line-height:1.55;max-width:54ch;}
+.flow .spbox{margin-top:12px;max-width:none;}
+.helpbtn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+  margin-left:10px;border:1px solid var(--color-ink);border-radius:50%;font-size:13px;line-height:1;
+  color:var(--color-ink);text-decoration:none;vertical-align:middle;flex:none;}
+.helpbtn:hover{background:var(--color-ink);color:var(--color-paper);}
+.flow .ftext .keynote{display:block;margin-top:6px;font-size:13px;color:var(--color-graphite);}
+.flow .ftext .keynote a{color:var(--color-graphite);}
+/* link row on slide 1 (between intro and tools) */
+.linkrow{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 8px;}
+/* buttons on INK slides flip to cream */
+.slide.dark a.btnbox{color:var(--color-paper);border-color:var(--color-paper);}
+.slide.dark a.btnbox:hover{background:var(--color-paper);color:var(--color-ink);}
+/* clickable brand → back to slide 1 */
+.localesw{cursor:pointer;}
+.localesw:hover{color:var(--color-ink);}
+body.dark-mode .localesw:hover{color:var(--color-paper);}
 
 @media (max-width:900px){
   .tool-grid,.insight-grid,.handson{grid-template-columns:1fr 1fr;}
@@ -368,7 +392,7 @@ a.btnbox.ext:before{content:"↗ ";}
 
 <div class="progline" id="progline"></div>
 <nav class="edgenav">好學生筆記 <span>·</span> Workshop</nav>
-<div class="localesw">好學生筆記 · Good Student Notes</div>
+<div class="localesw" id="brandHome" title="回到第一頁">好學生筆記 · Good Student Notes</div>
 
 <main class="deck" id="deck">
 
@@ -379,6 +403,10 @@ a.btnbox.ext:before{content:"↗ ";}
     <h1 class="display">好學生筆記</h1>
     <p class="lead">一場關於「怎麼樣才是真的學得到東西」的兩小時工作坊。</p>
     <p class="body">大家好,我是 <b>江碩濤</b>。我來自<b>中鼎工程</b>,我們是做比較大型的工程顧問開發的公司。今天想把「好學生筆記」這個我自己做的學習專案分享給大家 —— 簡報就是一個連結,裡面所有東西都是<b>開源、可以直接使用</b>的。</p>
+    <div class="linkrow">
+      <a class="btnbox home" href="https://goodedunote.web.app/" title="回 goodedunote 首頁">回 goodedunote 首頁</a>
+      <a class="btnbox ext" href="https://github.com/shuotao/workshop" target="_blank" rel="noopener" title="本工作坊開源碼">GitHub 開源碼</a>
+    </div>
     <div class="tools-head">↗ 明天開始前,請先下載安裝這些工具(點圖卡前往下載)</div>
     <div class="tool-grid">
       <a class="toolcard" href="https://antigravity.google/download" target="_blank" rel="noopener">
@@ -593,18 +621,64 @@ a.btnbox.ext:before{content:"↗ ";}
     <p class="body muted">圖文分離:文字進 Google Docs,六色標註與局部插圖再貼回統整表 —— 一條龍結案。</p>
   </section>
 
-  <!-- 10 — advanced / obsidian / karpathy -->
+  <!-- 10 — advanced: run the whole flow on your own machine (block 1) -->
   <section class="slide top" data-title="進階與自動化">
-    <div class="watermark">10</div>
-    <div class="kicker"><span class="arrow">↗</span> <span>Advanced · Automation</span> <span class="num">10 / 12</span></div>
-    <h2 class="display">進階與自動化:<br>蒐集並強化你的學習</h2>
-    <ul class="list">
-      <li><b>工具統計</b> —— 現場盤點大家用的:Claude Code、Codex CLI,或 IDE(安裝 Antigravity IDE)。</li>
-      <li><b>Karpathy gist wiki LLM framework</b> —— 直接要求 AI 照著做。<a class="refit" href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">karpathy/442a6bf… gist</a></li>
-      <li><b>raw 好學生筆記範本 + ingest</b> → 產生 wiki。</li>
-      <li>進入 wiki,做 <b>Obsidian</b> 的編輯與基本操作。</li>
-      <li><b>Query 練習</b> —— 問問題、編輯、情境思考,回到 CLI / IDE 問,產生更新的 .md,再次進入重新編輯。</li>
-    </ul>
+    <div class="kicker"><span class="arrow">↗</span> <span>10 / 12 · Advanced — Run It Yourself</span></div>
+    <h2 class="display">進階:把流程<br>搬到你自己的電腦</h2>
+    <p class="lead">工具統計之後 —— 把整套好學生筆記 clone 到你自己機器,用同一段素材親手跑一次。</p>
+    <ol class="flow">
+      <li>
+        <span class="fnum">01</span>
+        <div>
+          <div class="ftitle"><b>工具統計</b></div>
+          <div class="ftext">先盤點你手上用什麼:Claude Code、Codex CLI,或安裝 Antigravity IDE —— 等一下就用它的對話框驅動。</div>
+        </div>
+      </li>
+      <li>
+        <span class="fnum">02</span>
+        <div>
+          <div class="ftitle"><b>Clone 專案</b></div>
+          <div class="ftext">開 Antigravity IDE,或在桌面新增一個資料夾;在對話框直接貼上指令,把專案複製下來。</div>
+          <div class="spbox flowbox">
+            <div class="spbar"><span>↗ 終端機 / 對話框</span><button class="spcopy">複製</button></div>
+            <div class="sptext">git clone https://github.com/shuotao/workshop.git</div>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="fnum">03</span>
+        <div>
+          <div class="ftitle"><b>跑同一段素材,給角色,看成果</b><a class="helpbtn" href="https://console.groq.com/keys" target="_blank" rel="noopener" title="申請免費 Groq API Key(Step 1 轉錄用)— 設定教學見 studio.html">?</a></div>
+          <div class="ftext">專案根目錄就有同一個 <b>lightalking.mp3</b>。Step 1 轉錄走專案的 Groq Whisper,<b>不論 CLI 或 Antigravity 都需要 Groq API Key</b>(點上方 <b>?</b> 免費申請)。把你的 key <b>貼到下面 prompt 中「__把你的 Groq Key 貼在這裡__」那一格</b>,再按複製。
+            <span class="keynote">設定教學可參考 <a href="https://shuotao.github.io/GENAI/web/studio.html" target="_blank" rel="noopener">studio.html</a>;Phase B 校稿另需 Gemini Key(<a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>)。</span>
+            <span class="keynote">prompt 裡的<b>【校正用語】</b>是這段 lightalking 的範例(講者名、Claude code、聽不清的專有名詞)——換成你自己的錄音時,替換成你的講者名與術語即可。</span>
+          </div>
+          <div class="spbox flowbox">
+            <div class="spbar"><span>↗ 先填入你的 Groq Key,再複製貼進對話框</span><button class="spcopy">複製</button></div>
+            <div class="sptext">我已經 clone 好學生筆記專案。我的 GROQ_API_KEY 是「__把你的 Groq Key 貼在這裡__」,請先幫我寫進專案根目錄的 .env。接著用專案裡的規則,對根目錄的 lightalking.mp3 完整執行 Step 1 → Step 4(Phase A 清理 → Phase B 校稿 → Step 3 知識補充 → Step 4 立場置入),身份設定為「__填你的職業/身份__」。跑完把每一步的產出都給我。
+
+【校正用語】(很重要 —— 沒有它 clean 結果會跑掉;轉錄與校稿時請務必套用。換成你自己的錄音時,替換成你的講者名與術語即可):
+· 主講者名稱固定為「江碩濤」,勿聽成別的名字。
+· 公司名是「中鼎工程」,不是「中領工程」。
+· 這些專有名詞常被聽錯,請以此為準:Claude code、tool use、plan mode、agent、終端機、GitHub 的 star / fork、Codex CLI、Antigravity IDE。</div>
+          </div>
+        </div>
+      </li>
+      <li>
+        <span class="fnum">04</span>
+        <div>
+          <div class="ftitle"><b>圖文合成:生出圖像版好學生筆記</b></div>
+          <div class="ftext">Step 4 只會產出<b>純文字 .md</b>(類比與洞察框)——<b>不會自動生圖</b>。要像桌面那種彩色手寫筆記圖,得再手動觸發。在 IDE / CLI 裡,這一步「<b>圖文合成</b>」才是真正的成果。
+            <span class="keynote">兩階段:<b>/note</b> 把 .md 渲染成 A4 底圖 → <b>/好學生筆記</b>(指定身份)產逐頁生圖提示 → IDE 用 <b>generate_image</b>(Imagen)在底圖上疊手寫字,輸出 pNN.png。</span>
+          </div>
+          <div class="spbox flowbox">
+            <div class="spbar"><span>↗ 貼進對話框(承接 Step 4 的 .md)</span><button class="spcopy">複製</button></div>
+            <div class="sptext">接續剛剛 Step 4 的 notes_<身份>.md,請做好學生筆記「圖像版」:先跑 /note 把它渲染成 A4 底圖,再跑 /好學生筆記(身份設定為「__填你的職業/身份__」)產生逐頁生圖提示,最後用 generate_image 依提示在底圖上疊上繁體中文手寫標記,輸出彩色手寫筆記圖 pNN.png。</div>
+          </div>
+        </div>
+      </li>
+    </ol>
+    <p class="body muted">第二段(下一頁):有了完整稿件,放進 Obsidian —— 我們邊做邊討論。</p>
   </section>
 
   <!-- 11 — obsidian practice -->
@@ -621,6 +695,7 @@ a.btnbox.ext:before{content:"↗ ";}
     <div class="letter-eyebrow">A Letter From The Work Desk · 結語</div>
     <div class="letter-body">這個世界已經有太多東西在替你做摘要。<br><br>好學生筆記只做一件相反的事:把講者那一整週準備過、現場想過、停頓過的,<em>原樣留下來</em>。<br><br>我什麼時候會成為學生?在時間有限下,語言模型能不能給我們一種全新的學習體驗?</div>
     <div class="letter-foot">謝謝大家 — 一週內,你會收到一份屬於你自己的好學生筆記</div>
+    <a class="btnbox home" href="https://goodedunote.web.app/" style="margin-top:28px;">回 goodedunote 首頁</a>
   </section>
 
 </main>
@@ -702,6 +777,7 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='End'){go(N-1);}
 });
 go(0);
+document.getElementById('brandHome').onclick=()=>go(0);
 
 /* ---------------- GENAI "Physics of Insight" — verbatim text + HOW + Technique ----------------
    text = 主張(原文) · how = HOW(原文) · tech = Technique(原文)
@@ -838,11 +914,17 @@ INSIGHTS.forEach(d=>{
 });
 genCopy.onclick=()=>copyText(genText._plain||genText.textContent,genCopy);
 
+/* slide 10 — wire static copy boxes (git clone + run prompt) */
+document.querySelectorAll('.flowbox').forEach(box=>{
+  const b=box.querySelector('.spcopy'),t=box.querySelector('.sptext');
+  if(b&&t)b.onclick=()=>copyText(t.textContent,b);
+});
+
 /* ---------------- slide 5 — mindset stepper ---------------- */
 const STEPS=[
  {tag:"許願 · One-shot",
   body:"大家都在跟 AI 許願。注意:許願要講<b>它聽得懂的功能</b>,而不是它沒看過的名字。複製這句貼給 AI,看它 one-shot 給你什麼 ——",
-  prompt:"幫我做一個小工具:輸入一段演講錄音的逐字稿,輸出一份方便我日後複習的學習筆記。請直接幫我做出來。",
+  prompt:"幫我做一個小工具:輸入一段演講的錄音檔(聲音),輸出一份方便我日後複習的學習筆記。請直接幫我做出來。",
   pair:"講功能 → AI 能 one-shot 出 60–80 分"},
  {tag:"破綻 · 每個人都一樣",
   body:"問題來了:這個願誰許都一樣,AI 給的也幾乎一樣 —— 一個通用的摘要器。它禁不起交付,也<b>還不是「你的」</b>。我們真正想要的,是讓<b>每個同學做出來的都不一樣</b>。",
@@ -852,7 +934,7 @@ const STEPS=[
   pair:"拆解 + 注入你的細節 → 你的專屬版本"},
  {tag:"要求拆解 · 叫 AI 先拆",
   body:"不會拆?把「拆解」也交給 AI。複製這句先讓它規劃、別急著動手(這就是 plan mode 的精神)——",
-  prompt:"先不要動手。請把「把演講逐字稿變成一份個人化的複習筆記」這個任務,拆解成 3–5 個步驟,每一步寫清楚輸入與產出,並確認上一步的產出能成為下一步的輸入。其中要有一步,是注入我的身份、立場與最在意的重點。等我確認後,再開始做。",
+  prompt:"先不要動手。請把「把一段演講錄音檔變成一份個人化的複習筆記」這個任務,拆解成 3–5 個步驟,每一步寫清楚輸入與產出,並確認上一步的產出能成為下一步的輸入。第一步應該是把錄音轉成逐字稿;其中還要有一步,是注入我的身份、立場與最在意的重點。等我確認後,再開始做。",
   pair:"不會拆 → 就叫 AI 先拆、再做"}
 ];
 let sIdx=0;
