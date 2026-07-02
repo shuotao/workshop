@@ -342,6 +342,9 @@ a.btnbox:hover{background:var(--color-ink);color:var(--color-paper);}
 a.btnbox.dl:before{content:"↓ ";}
 a.btnbox.ext:before{content:"↗ ";}
 a.btnbox.home:before{content:"← ";}
+a.btnbox.board{background:var(--color-ink);color:var(--color-paper);font-weight:500;}
+a.btnbox.board:before{content:"▦ ";}
+a.btnbox.board:hover{opacity:.85;}
 /* ---------- slide 10 — numbered advanced flow ---------- */
 .flow{list-style:none;max-width:920px;margin-top:6px;border-top:1px solid var(--color-ink);}
 .flow>li{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;
@@ -532,6 +535,7 @@ body.dark-mode #ecoSwitch button.on{background:var(--color-paper);color:var(--co
       </div>
       <div class="step-aside" id="stepAside"></div>
     </div>
+    <a class="btnbox ext board" href="board/board.html?room=slide5" target="_blank" rel="noopener" style="margin-top:24px;align-self:flex-start;">進入白板 — 心法討論</a>
   </section>
 
   <!-- 6 — birth of the method (Physics of Insight, dark chapter) -->
@@ -582,6 +586,10 @@ body.dark-mode #ecoSwitch button.on{background:var(--color-paper);color:var(--co
       <div class="hstep">
         <span class="hn">Step 3</span><span class="ht">貼上右下方 Prompt 當<span class="eco-sysname">系統指令</span></span>
         <a class="btnbox" href="#" onclick="copyPrompt();return false;">複製 Prompt</a>
+      </div>
+      <div class="hstep">
+        <span class="hn">白板</span><span class="ht">把你的 GEM 成果截圖貼上,大家一起看</span>
+        <a class="btnbox ext board" href="board/board.html?room=slide8" target="_blank" rel="noopener">進入白板 — 貼上你的 GEM 成果</a>
       </div>
     </div>
     <p class="body" style="margin-bottom:8px;">把整段 Prompt 貼進 <span class="eco-assistant">GEM</span> 當<span class="eco-sysname">系統指令</span>,再丟入音檔逐字稿,就能跑 Step 1–5 的好學生筆記流程。<br><b>進階:</b>把 7/12 產生的「個人化權重」貼進 Prompt 裡的「# 個人化權重」虛線區塊,成果就會依你的權重加重 —— 之後每次處理都自動套用。</p>
@@ -747,6 +755,7 @@ body.dark-mode #ecoSwitch button.on{background:var(--color-paper);color:var(--co
         </div>
       </li>
     </ol>
+    <a class="btnbox ext board" href="board/board.html?room=slide10" target="_blank" rel="noopener" style="margin-top:8px;margin-bottom:18px;align-self:flex-start;">進入白板 — 分享你的流程截圖</a>
     <p class="body muted">第二段(下一頁):有了完整稿件,放進 Obsidian —— 我們邊做邊討論。</p>
   </section>
 

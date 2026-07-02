@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".validate": "$roomId.matches(/^slide(5|8|10)$/)",
+        "objects": {
+          "$objId": {
+            ".validate": "!newData.exists() || newData.hasChildren(['type'])",
+            "type": { ".validate": "newData.val().matches(/^(note|image|path|shape)$/)" },
+            "data": {
+              "src": { ".validate": "!newData.exists() || (newData.isString() && newData.val().length < 1100000)" }
+            }
+          }
+        },
+        "presence": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "!newData.exists() || newData.hasChildren(['nick'])"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>協作白板 — 好學生筆記 Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;700&family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+
+  <!-- 頂部工具列 -->
+  <div class="topbar">
+    <span class="brand">好學生筆記 · 白板</span>
+    <span class="room" id="roomLabel">—</span>
+    <div class="divider"></div>
+
+    <div class="toolgroup">
+      <button class="tool active" id="toolSelect" title="選取 / 移動">↖ 選取</button>
+      <button class="tool" id="toolNote" title="新增便利貼">▦ 便利貼</button>
+      <button class="tool" id="toolDraw" title="自由畫筆">✎ 畫筆</button>
+      <button class="tool" id="toolRect" title="方框">▢ 框</button>
+      <button class="tool" id="toolDelete" title="刪除選取 (Delete)">🗑</button>
+    </div>
+
+    <div class="divider"></div>
+    <div class="swatches" id="swatches"></div>
+
+    <div class="divider"></div>
+    <div class="toolgroup">
+      <button class="tool primary" id="toolCapture" title="擷取我的畫面並貼上">⛶ 擷取畫面</button>
+      <button class="tool" id="toolUpload" title="上傳圖片">⬆ 上傳</button>
+    </div>
+
+    <span class="spacer"></span>
+    <div class="presence" id="presence"></div>
+    <span class="pcount" id="pcount"></span>
+  </div>
+
+  <!-- 畫布舞台 -->
+  <div class="stage" id="stage">
+    <canvas id="board"></canvas>
+    <div class="cursors" id="cursors"></div>
+  </div>
+
+  <div class="hint" id="hint">截圖小撇步:用系統截圖到剪貼簿(Mac ⌘⇧⌃4 / Win ⊞⇧S)後,直接在這裡按 ⌘V / Ctrl+V 貼上;或拖曳圖片進來。</div>
+  <div class="toast" id="toast"></div>
+  <input type="file" id="fileInput" accept="image/*" multiple hidden>
+
+  <!-- 登入 modal -->
+  <div class="overlay" id="overlay">
+    <div class="card">
+      <div class="eyebrow">Collaborative Whiteboard</div>
+      <h1 id="loginTitle">進入白板</h1>
+      <p>輸入一個暱稱,就能和大家一起在這面白板上即時協作。</p>
+      <input type="text" id="nickInput" maxlength="16" placeholder="你的暱稱" autocomplete="off">
+      <div class="colorpick" id="colorPick"></div>
+      <button class="enter" id="enterBtn">進入白板 →</button>
+      <div class="status" id="loginStatus"></div>
+    </div>
+  </div>
+
+  <!-- Fabric.js (釘版本,UMD 全域 window.fabric) -->
+  <script src="https://cdn.jsdelivr.net/npm/fabric@6.7.1/dist/index.min.js"></script>
+  <!-- Firebase v9 compat(命名空間 API) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="board.js"></script>
+</body>
+</html>
