@@ -166,7 +166,7 @@ def phase_b_structured(blocks: list[dict], context: str | None = None) -> list[d
     payload = {"texts": texts, "context": context or ""}
     try:
         proc = subprocess.run(
-            ["python3", str(phase_b), "--mode", "structured"],
+            [sys.executable, str(phase_b), "--mode", "structured"],
             input=json.dumps(payload, ensure_ascii=False),
             capture_output=True, text=True, check=True,
         )

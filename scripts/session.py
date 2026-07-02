@@ -39,6 +39,9 @@ GROQ_SCRIPT = PROJECT_ROOT / ".claude/skills/good-student-notes/scripts/groq_tra
 QAQC_SCRIPT = PROJECT_ROOT / "scripts/qaqc_srt.py"
 PHASE_B_SCRIPT = PROJECT_ROOT / "scripts/qaqc_phase_b.py"
 
+# 用當前直譯器呼叫子腳本(不要硬編碼 "python3":Windows 通常只有 "python")。
+PYTHON = sys.executable
+
 
 # ─── Engine routing(誰在叫我?)──────────────────────────────────────
 # 規則:CLI host(Claude Code、Gemini CLI 等)用 OAuth login token 計費,絕不打
@@ -198,7 +201,7 @@ def new_session(args):
     transcript = sdir / "transcript.srt"
     # groq_transcribe.py signature: <media> [output_dir] [context_file]
     # We want output to be named transcript.srt (not <stem>.srt), so we handle rename.
-    run(["python3", str(GROQ_SCRIPT), str(src_link), str(sdir), str(ctx_path)])
+    run([PYTHON, str(GROQ_SCRIPT), str(src_link), str(sdir), str(ctx_path)])
     # groq script outputs <stem>.srt — since we symlinked to source.<ext>, stem = "source"
     groq_out = sdir / "source.srt"
     if groq_out.exists():
@@ -217,7 +220,7 @@ def new_session(args):
 
     # 5. Phase A cleanup → cleaned.srt
     cleaned_srt = sdir / "cleaned.srt"
-    cmd = ["python3", str(QAQC_SCRIPT), str(transcript), "-o", str(cleaned_srt)]
+    cmd = [PYTHON, str(QAQC_SCRIPT), str(transcript), "-o", str(cleaned_srt)]
     if args.domain:
         cmd += ["--domain", args.domain]
     run(cmd)
@@ -228,7 +231,7 @@ def new_session(args):
     transcript_cleaned_srt = None
     if args.structured_srt:
         transcript_cleaned_srt = sdir / "transcript.cleaned.srt"
-        cmd = ["python3", str(QAQC_SCRIPT), str(transcript),
+        cmd = [PYTHON, str(QAQC_SCRIPT), str(transcript),
                "-o", str(transcript_cleaned_srt),
                "--structured"]
         if args.domain:
@@ -296,7 +299,7 @@ def new_session(args):
             tmp_in = sdir / ".phase_b_input.txt"
             tmp_in.write_text(plain, encoding="utf-8")
             try:
-                cmd = ["python3", str(PHASE_B_SCRIPT), str(tmp_in),
+                cmd = [PYTHON, str(PHASE_B_SCRIPT), str(tmp_in),
                        "-o", str(cleaned_md), "--mode", "merged"]
                 if ctx_text:
                     cmd += ["--context", str(ctx_path)]
@@ -364,7 +367,7 @@ def new_session(args):
 
         elif engine == "api":
             try:
-                cmd = ["python3", str(PHASE_B_SCRIPT), str(cleaned_md),
+                cmd = [PYTHON, str(PHASE_B_SCRIPT), str(cleaned_md),
                        "-o", str(enhanced_md), "--mode", "enhance"]
                 if args.keywords:
                     cmd += ["--keywords", args.keywords]
@@ -426,7 +429,7 @@ def new_session(args):
 
         elif engine == "api":
             try:
-                cmd = ["python3", str(PHASE_B_SCRIPT), str(source_md),
+                cmd = [PYTHON, str(PHASE_B_SCRIPT), str(source_md),
                        "-o", str(notes_md), "--mode", "notes",
                        "--identity", args.identity]
                 if ctx_text:
