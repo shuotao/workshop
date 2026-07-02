@@ -378,7 +378,46 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
   .exp-right{border-left:none;border-top:1px solid var(--color-ink);padding-left:0;padding-top:18px;}
   .edgenav,.localesw{display:none;}
   .slide{padding:56px 28px 92px;}
+  #ecoSwitch{top:6px;}
+  #ecoSwitch .ecolab{display:none;}
 }
+
+/* ---------- ecosystem switcher (i18n-style) ---------- */
+#ecoSwitch{
+  position:fixed;top:10px;left:50%;transform:translateX(-50%);
+  z-index:60;display:none;align-items:stretch;
+  border:1px solid var(--color-ink);background:var(--color-paper);
+}
+body.eco-on #ecoSwitch{display:inline-flex;}
+body.dark-mode #ecoSwitch{background:var(--color-ink);border-color:var(--color-paper);}
+#ecoSwitch .ecolab{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  padding:0 12px;color:var(--color-graphite);border-right:1px solid var(--color-field);
+  display:flex;align-items:center;
+}
+#ecoSwitch button{
+  font-family:var(--font-text);font-size:13px;padding:7px 15px;
+  background:transparent;border:none;border-left:1px solid var(--color-field);
+  color:var(--color-ink);cursor:pointer;letter-spacing:.01em;line-height:1;
+}
+body.dark-mode #ecoSwitch button{color:var(--color-paper);}
+#ecoSwitch button:first-of-type{border-left:none;}
+#ecoSwitch button.on{background:var(--color-ink);color:var(--color-paper);}
+body.dark-mode #ecoSwitch button.on{background:var(--color-paper);color:var(--color-ink);}
+
+/* Claude image-replacement note (gray, NON-copyable) */
+.eco-only{display:none;}
+.eco-imgnote{
+  margin-top:10px;font-size:13px;line-height:1.55;color:var(--color-graphite);
+  border-left:2px solid var(--color-field);padding-left:12px;user-select:none;-webkit-user-select:none;
+}
+.eco-imgnote .exlab{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.eco-imgnote .exsample{display:block;margin-top:6px;font-style:italic;color:var(--color-ash);opacity:.72;}
+
+/* slide 5 beat-1: one-shot tool direct link + fallback steps */
+.onelink{margin-top:14px;font-size:14px;color:var(--color-ink);line-height:1.5;}
+.onelink a{color:var(--color-ink);text-decoration:underline;text-underline-offset:3px;font-weight:500;}
+.onelink .onesteps{display:block;margin-top:5px;font-size:12.5px;color:var(--color-graphite);line-height:1.55;}
 </style>
 </head>
 <body>
@@ -393,6 +432,14 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
 <div class="progline" id="progline"></div>
 <nav class="edgenav">好學生筆記 <span>·</span> Workshop</nav>
 <div class="localesw" id="brandHome" title="回到第一頁">好學生筆記 · Good Student Notes</div>
+
+<!-- ecosystem switcher (i18n-style) — same workshop, swap the toolchain -->
+<div id="ecoSwitch" role="tablist" aria-label="切換 AI 生態系">
+  <span class="ecolab">生態系</span>
+  <button data-k="gemini" role="tab">Gemini</button>
+  <button data-k="chatgpt" role="tab">ChatGPT</button>
+  <button data-k="claude" role="tab">Claude</button>
+</div>
 
 <main class="deck" id="deck">
 
@@ -469,7 +516,7 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
   </section>
 
   <!-- 5 — workshop purpose / mindset -->
-  <section class="slide top" data-title="心法先於工具">
+  <section class="slide top" data-title="心法先於工具" data-eco-slide>
     <div class="watermark">05</div>
     <div class="kicker"><span class="arrow">↗</span> <span>Mindset</span> <span class="num">05 / 12</span></div>
     <h2 class="display">先聊「心法」,<br>再動手用任何 AI Agent</h2>
@@ -499,10 +546,10 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
   </section>
 
   <!-- 7 — PAPER broadside: weight your detail → personalized prompt (no cards) -->
-  <section class="slide top" data-title="今年的 AI 躍進">
+  <section class="slide top" data-title="今年的 AI 躍進" data-eco-slide>
     <div class="kicker"><span class="arrow">↗</span> <span>07 / 12 · Weight Your Detail</span></div>
     <h2 class="display">同樣的功能,<br>怎麼變成「你的」?</h2>
-    <p class="lead">今年 AI 在語言銜接與語意國情切換上突破很大,這些功能大家都拿得到。差別在<b>權重</b> —— 點選功能,右側即時長出可貼進 8/12 GEM Prompt 的<b>個人化權重區塊</b>。</p>
+    <p class="lead">今年 AI 在語言銜接與語意國情切換上突破很大,這些功能大家都拿得到。差別在<b>權重</b> —— 點選功能,右側即時長出可貼進 8/12 <span class="eco-assistant">GEM</span> Prompt 的<b>個人化權重區塊</b>。</p>
     <div class="weigh-layout">
       <div class="weigh-left">
         <div class="fn-eyebrow">— 選擇你要賦予權重的功能 —</div>
@@ -511,43 +558,43 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
       <div class="weigh-right">
         <div class="weigh-count" id="weighCount">已選 <b>0</b> 項 —— 還沒賦予權重。</div>
         <div class="genwrap">
-          <div class="genbar"><span>↗ 個人化權重區塊 — 複製貼到 8/12</span>
+          <div class="genbar"><span>↗ 個人化權重 — 選好即自動帶入 8/12 的 Prompt(也可複製)</span>
             <button class="gencopy" id="genCopy" disabled>複製</button></div>
-          <div class="gentext" id="genText"><span class="ph">← 點選左側你最重視的功能(含技巧),這裡會即時長出可貼進 GEM 的【個人化權重】區塊。</span></div>
+          <div class="gentext" id="genText"><span class="ph">← 點選左側你最重視的功能(含技巧),這裡會即時長出可貼進 <span class="eco-assistant">GEM</span> 的【個人化權重】區塊。</span></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 8 — Gemini GEM copyable prompt -->
-  <section class="slide top" data-title="體驗版 GEM Prompt">
-    <div class="kicker"><span class="arrow">↗</span> <span>Hands-on · Gemini Gem</span> <span class="num">08 / 12</span></div>
-    <h2 class="display" style="margin-bottom:14px;">在 Gemini Pro 的 GEM 做一個體驗版</h2>
+  <section class="slide top" data-title="體驗版 GEM Prompt" data-eco-slide>
+    <div class="kicker"><span class="arrow">↗</span> <span>Hands-on · <span class="eco-label">Gemini</span> <span class="eco-assistant">GEM</span></span> <span class="num">08 / 12</span></div>
+    <h2 class="display" style="margin-bottom:14px;">在 <span class="eco-assistantfull">Gemini Pro 的 GEM</span> 做一個體驗版</h2>
     <div class="handson">
       <div class="hstep">
         <span class="hn">Step 1</span><span class="ht">下載閃講音檔當素材</span>
         <a class="btnbox dl" href="../lightalking.mp3" download>lightalking.mp3</a>
       </div>
       <div class="hstep">
-        <span class="hn">Step 2</span><span class="ht">開 Gemini Pro 建一個新 GEM</span>
-        <a class="btnbox ext" href="https://gemini.google.com/gems/create" target="_blank" rel="noopener">建立 GEM</a>
+        <span class="hn">Step 2</span><span class="ht">開 <span class="eco-label">Gemini</span> 建一個新 <span class="eco-assistant">GEM</span></span>
+        <a class="btnbox ext" id="ecoCreateBtn" href="https://gemini.google.com/gems/create" target="_blank" rel="noopener">建立 GEM</a>
       </div>
       <div class="hstep">
-        <span class="hn">Step 3</span><span class="ht">貼上右下方 Prompt 當系統指令</span>
+        <span class="hn">Step 3</span><span class="ht">貼上右下方 Prompt 當<span class="eco-sysname">系統指令</span></span>
         <a class="btnbox" href="#" onclick="copyPrompt();return false;">複製 Prompt</a>
       </div>
     </div>
-    <p class="body" style="margin-bottom:8px;">把整段 Prompt 貼進 Gem 當系統指令,再丟入音檔逐字稿,就能跑 Step 1–5 的好學生筆記流程。<br><b>進階:</b>把 7/12 產生的「個人化權重」貼進 Prompt 裡的「# 個人化權重」虛線區塊,成果就會依你的權重加重 —— 之後每次處理都自動套用。</p>
+    <p class="body" style="margin-bottom:8px;">把整段 Prompt 貼進 <span class="eco-assistant">GEM</span> 當<span class="eco-sysname">系統指令</span>,再丟入音檔逐字稿,就能跑 Step 1–5 的好學生筆記流程。<br><b>進階:</b>把 7/12 產生的「個人化權重」貼進 Prompt 裡的「# 個人化權重」虛線區塊,成果就會依你的權重加重 —— 之後每次處理都自動套用。</p>
     <div class="codewrap">
       <div class="codebar"><span class="muted">好學生筆記生成秘書 · system prompt</span>
         <button class="copybtn" id="copybtn" onclick="copyPrompt()">複製 Prompt</button>
       </div>
       <pre class="code" id="gemPrompt"># 角色與任務
-你是一個「好學生筆記」生成秘書。你的任務是引導使用者,將原始逐字稿依序執行 Step 1 到 Step 5。你必須讓最終產出具備極高的「可讀性」與「視覺排版效果」,採用圖文分離的「提案三」架構,並在最後一個步驟主動為使用者生成 Google Docs 文件與視覺插圖,達成一條龍的結案體驗。
+你是一個「好學生筆記」生成秘書。你的任務是引導使用者,將原始逐字稿依序執行 Step 1 到 Step 5。你必須讓最終產出具備極高的「可讀性」與「視覺排版效果」,採用圖文分離的「提案三」架構,並在最後一個步驟主動<span id="ecoRoleTail">為使用者生成 Google Docs 文件與視覺插圖,達成一條龍的結案體驗</span>。
 
-# 個人化權重(把 7/12 產生的【個人化權重】區塊貼在這條虛線之間 ↓)
+# 個人化權重(7/12 選好後會自動帶入這條虛線之間 ↓)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-【個人化權重】(尚未貼上 —— 預設所有功能平均處理)
+<span id="gemWeightSlot">【個人化權重】(尚未貼上 —— 預設所有功能平均處理)</span>
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 規則:若上面列出了功能,請在對應的 Step 2–4「特別加重」執行那幾項,並確實套用各自的「技巧」;沒列到的維持預設。
 
@@ -557,7 +604,7 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
 - 【Step 2 (校稿)】:進行標點與分段校稿,精簡並保留精華。
 - 【Step 3 (補充)】:在首次提及的術語後加入專業知識補充。
 - 【Step 4 (圖文筆記草稿)】:產出最終版優化筆記(套用目標立場類比),並在段落間「附上圖片生成指令 (Prompt)」,在此階段先不生成圖片。
-- 【Step 5 (文件與生圖結案)】:使用工具直接生成 Step 4 提到的所有圖片,同時透過工具建立一份完整的 Google Docs 文件,並引導使用者自行將圖片貼入文件中。
+- 【Step 5 (文件與生圖結案)】:<span id="ecoFlowStep5">使用工具直接生成 Step 4 提到的所有圖片,同時透過工具建立一份完整的 Google Docs 文件,並引導使用者自行將圖片貼入文件中。</span>
 
 ---
 
@@ -578,7 +625,7 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
 
 # Step 4 局部微型插圖提示機制
 在 Step 4 的筆記中,每當出現一個「立場類比」時,請在該段落下方,為使用者提供一個「🎨 影像生成指令」。
-請在 Step 4 的結尾告知使用者:『確認筆記內容與排版無誤後,請告訴我進入 Step 5,我將為您一口氣生成這些圖片並建立 Google Docs 文件!』
+請在 Step 4 的結尾告知使用者:『確認筆記內容與排版無誤後,請告訴我進入 Step 5,<span id="ecoStep4End">我將為您一口氣生成這些圖片並建立 Google Docs 文件</span>!』
 
 ### 🎨 局部插圖 Prompt 範本(由你自動依立場生成):
 「一張極簡高質感的局部特寫照片。背景是乾淨的木質桌面。畫面上有一張 {橘色或綠色} 的手寫便利貼,上面用工整的繁體中文黑色手寫字寫著:『{類比的核心關鍵字}』。便利貼旁隨意疊放著一個 {符合立場的精緻物件,如牙醫口鏡、花剪等}。柔和的自然光,豐富的細節與真實材質感。」
@@ -588,11 +635,11 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
 # Step 5 文件與插圖生成機制(結案階段)
 當使用者指示進入 Step 5 時,你必須「同時」執行以下三項任務來完成結案:
 
-1. **生成所有圖片**:根據 Step 4 規劃的所有 Prompt,直接呼叫生圖工具,一次性生成所有對應的插圖。
-2. **建立 Google Docs 文件**:使用建立文件的工具(如 Google Workspace 擴充功能),將 Step 4 的完整筆記文字(包含排版、補充與立場類比)寫入一份全新的 Google Docs 中。請在文件最下方建立一個「🎨 視覺化意象統整表」的空位。
-3. **結案引導說明**:在回覆中提供生成好的 Google Docs 連結與所有的 AI 圖片,並向使用者說明:
+1. **生成所有圖片**:<span id="ecoPromptImg">根據 Step 4 規劃的所有 Prompt,直接呼叫生圖工具,一次性生成所有對應的插圖。</span>
+2. **建立 Google Docs 文件**:<span id="ecoPromptDocs">使用建立文件的工具(如 Google Workspace 擴充功能),將 Step 4 的完整筆記文字(包含排版、補充與立場類比)寫入一份全新的 Google Docs 中。請在文件最下方建立一個「🎨 視覺化意象統整表」的空位。</span>
+3. **結案引導說明**:<span id="ecoStep5p3">在回覆中提供生成好的 Google Docs 連結與所有的 AI 圖片,並向使用者說明:
    > 「🎉 文件與圖片皆已準備完畢!
-   > 受限於系統權限,我無法直接將圖片塞入文件中。請您點擊上方連結打開 Google Docs,並將這裡生成的圖片直接『複製貼上』到文件末尾的統整表空位中,即可完成您的專屬圖文筆記!」
+   > 受限於系統權限,我無法直接將圖片塞入文件中。請您點擊上方連結打開 Google Docs,並將這裡生成的圖片直接『複製貼上』到文件末尾的統整表空位中,即可完成您的專屬圖文筆記!」</span>
 
 # 最終網頁版筆記結構範本(以牙醫師為例)
 > 📝 **學習摘要**
@@ -608,6 +655,19 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
 > 🎯 **牙醫師視角**
 > 🔵**Claude Code**🔵 就像是一把高精度的牙科手機(Handpiece),能精準快速地下鑽</pre>
     </div>
+
+    <!-- Claude 語系:不生圖 → 給可複製的替代生圖 prompt -->
+    <div class="eco-only" data-eco="claude">
+      <div class="spbox flowbox">
+        <div class="spbar"><span>↗ Claude 語系替代方案:複製這段「生圖 Prompt」貼到外部生圖工具</span><button class="spcopy">複製</button></div>
+        <div class="sptext">一張極簡高質感的局部特寫照片。乾淨的木質桌面上,一張橘色手寫便利貼,用工整的繁體中文黑色手寫字寫著:「(填入你的類比核心關鍵字,例如:Claude Code = 高精度牙科手機)」。便利貼旁隨意疊放一個符合你職業立場的精緻物件(牙醫口鏡 / 花剪 / 咖啡濾杯 …)。柔和自然光,豐富細節與真實材質感。</div>
+      </div>
+      <div class="eco-imgnote">
+        <span class="exlab">為什麼這裡是複製框、不是圖?</span>
+        三家模型裡,<b>只有 Claude 目前不支援生圖</b>。所以在需要「輔助插圖」的步驟,Claude 語系不直接生圖,而是替你把 <b>生圖 Prompt</b> 寫好放進上面的複製框 —— 複製後貼到任一生圖工具(Nano Banana / Imagen / DALL·E)即可產出插圖,再貼回你的 Google Docs 統整表。
+        <span class="exsample">示意(灰字,不可複製):🎨 木桌上一張橘色便利貼,手寫「Claude Code = 高精度牙科手機」,旁邊放一支牙科探針,柔和自然光……</span>
+      </div>
+    </div>
   </section>
 
   <!-- 9 — results / google docs -->
@@ -622,7 +682,7 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
   </section>
 
   <!-- 10 — advanced: run the whole flow on your own machine (block 1) -->
-  <section class="slide top" data-title="進階與自動化">
+  <section class="slide top" data-title="進階與自動化" data-eco-slide>
     <div class="kicker"><span class="arrow">↗</span> <span>10 / 12 · Advanced — Run It Yourself</span></div>
     <h2 class="display">進階:把流程<br>搬到你自己的電腦</h2>
     <p class="lead">工具統計之後 —— 把整套好學生筆記 clone 到你自己機器,用同一段素材親手跑一次。</p>
@@ -631,14 +691,14 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
         <span class="fnum">01</span>
         <div>
           <div class="ftitle"><b>工具統計</b></div>
-          <div class="ftext">先盤點你手上用什麼:Claude Code、Codex CLI,或安裝 Antigravity IDE —— 等一下就用它的對話框驅動。</div>
+          <div class="ftext">先確認你要用哪個 agent —— 這一節就用 <b><span class="eco-ide">Antigravity IDE</span></b> 的對話框驅動(<span class="eco-idealt">或 Gemini CLI</span>)。三家做法一樣,換工具名而已。</div>
         </div>
       </li>
       <li>
         <span class="fnum">02</span>
         <div>
           <div class="ftitle"><b>Clone 專案</b></div>
-          <div class="ftext">開 Antigravity IDE,或在桌面新增一個資料夾;在對話框直接貼上指令,把專案複製下來。</div>
+          <div class="ftext">開 <span class="eco-ide">Antigravity IDE</span>(或你選的 agent),或在桌面新增一個資料夾;在對話框直接貼上指令,把專案複製下來。</div>
           <div class="spbox flowbox">
             <div class="spbar"><span>↗ 終端機 / 對話框</span><button class="spcopy">複製</button></div>
             <div class="sptext">git clone https://github.com/shuotao/workshop.git</div>
@@ -669,11 +729,20 @@ body.dark-mode .localesw:hover{color:var(--color-paper);}
         <div>
           <div class="ftitle"><b>圖文合成:生出圖像版好學生筆記</b></div>
           <div class="ftext">Step 4 只會產出<b>純文字 .md</b>(類比與洞察框)——<b>不會自動生圖</b>。要像桌面那種彩色手寫筆記圖,得再手動觸發。在 IDE / CLI 裡,這一步「<b>圖文合成</b>」才是真正的成果。
-            <span class="keynote">兩階段:<b>/note</b> 把 .md 渲染成 A4 底圖 → <b>/好學生筆記</b>(指定身份)產逐頁生圖提示 → IDE 用 <b>generate_image</b>(Imagen)在底圖上疊手寫字,輸出 pNN.png。</span>
+            <span class="keynote">兩階段:<b>/note</b> 把 .md 渲染成 A4 底圖 → <b>/好學生筆記</b>(指定身份)產逐頁生圖提示 → <span id="ecoImgStep">IDE 用 <b>generate_image</b>(Imagen)在底圖上疊手寫字,輸出 pNN.png</span>。</span>
           </div>
           <div class="spbox flowbox">
             <div class="spbar"><span>↗ 貼進對話框(承接 Step 4 的 .md)</span><button class="spcopy">複製</button></div>
-            <div class="sptext">接續剛剛 Step 4 的 notes_<身份>.md,請做好學生筆記「圖像版」:先跑 /note 把它渲染成 A4 底圖,再跑 /好學生筆記(身份設定為「__填你的職業/身份__」)產生逐頁生圖提示,最後用 generate_image 依提示在底圖上疊上繁體中文手寫標記,輸出彩色手寫筆記圖 pNN.png。</div>
+            <div class="sptext">接續剛剛 Step 4 的 notes_<身份>.md,請做好學生筆記「圖像版」:先跑 /note 把它渲染成 A4 底圖,再跑 /好學生筆記(身份設定為「__填你的職業/身份__」)產生逐頁生圖提示,<span class="eco-imgclause">最後用 generate_image 依提示在底圖上疊上繁體中文手寫標記,輸出彩色手寫筆記圖 pNN.png。</span></div>
+          </div>
+
+          <!-- Claude 語系:不生圖 → 逐頁提示改用複製框帶到外部生圖工具 -->
+          <div class="eco-only" data-eco="claude">
+            <div class="eco-imgnote">
+              <span class="exlab">Claude 語系:圖文合成怎麼做?</span>
+              Claude Code 會照樣跑 <b>/note</b> 與 <b>/好學生筆記</b> 產出「逐頁生圖提示」,但<b>不會自己生圖</b>。把每一頁的提示複製到外部生圖工具(Nano Banana / Imagen / DALL·E)在底圖上疊字,輸出 pNN.png —— 成果與另外兩家一致,只是生圖那一步在工具外完成。
+              <span class="exsample">示意(灰字,不可複製):/好學生筆記 產出 p01 提示 → 複製 → 貼進 Nano Banana + base_p01.png → 得到 p01.png……</span>
+            </div>
           </div>
         </div>
       </li>
@@ -746,6 +815,57 @@ const CUES = [
 const slides=[...document.querySelectorAll('.slide')];
 const N=slides.length;
 let idx=0;
+
+/* ---------------- ecosystem model (i18n-style: same workshop, swap the toolchain) ---------------- */
+const ECO={
+ gemini:{
+   label:'Gemini', assistant:'GEM', assistantFull:'Gemini Pro 的 GEM',
+   sysName:'系統指令', createLabel:'建立 GEM', createUrl:'https://gemini.google.com/gems/create',
+   oneshot:'AI Studio Build(ai.dev)', oneshotUrl:'https://aistudio.google.com/apps', oneshotSteps:'',
+   planTerm:'先規劃、後動手',
+   ide:'Antigravity IDE', ideAlt:'或 Gemini CLI',
+   promptImg:'根據 Step 4 規劃的所有 Prompt,直接呼叫生圖工具(Imagen / Nano Banana),一次性生成所有對應的插圖。',
+   promptDocs:'使用 Google Workspace 工具直接建立一份新的 Google Docs,把 Step 4 完整筆記(含排版、補充、立場類比)寫入,文末留「🎨 視覺化意象統整表」空位。',
+   roleTail:'為使用者生成 Google Docs 文件與視覺插圖,達成一條龍的結案體驗',
+   flowStep5:'使用工具直接生成 Step 4 的所有圖片,並建立一份完整 Google Docs,引導使用者把圖片貼入。',
+   step4End:'我將為您一口氣生成這些圖片並建立 Google Docs 文件',
+   step5p3:'在回覆中提供生成好的 Google Docs 連結與所有的 AI 圖片,並向使用者說明:\n   > 「🎉 文件與圖片皆已準備完畢!\n   > 受限於系統權限,我無法直接將圖片塞入文件中。請點上方連結打開 Google Docs,把圖片複製貼到文末統整表空位,即完成你的專屬圖文筆記!」',
+   imgStep:'IDE 用 <b>generate_image</b>(Imagen)在底圖上疊手寫字,輸出 pNN.png',
+   imgClause:'最後用 generate_image 依提示在底圖上疊上繁體中文手寫標記,輸出彩色手寫筆記圖 pNN.png。'
+ },
+ chatgpt:{
+   label:'ChatGPT', assistant:'GPT', assistantFull:'ChatGPT 的自訂 GPT',
+   sysName:'指令(Instructions)', createLabel:'建立 GPT', createUrl:'https://chatgpt.com/gpts/editor',
+   oneshot:'Canvas', oneshotUrl:'https://chatgpt.com/', oneshotSteps:'(Canvas 無法用網址直達)開新對話 → 訊息框選「Canvas」工具,或直接說「用 Canvas 幫我做一個…」。',
+   planTerm:'先讓它規劃(Plan)、再動手',
+   ide:'Codex CLI', ideAlt:'或 Codex(雲端)',
+   promptImg:'根據 Step 4 規劃的所有 Prompt,直接呼叫生圖工具(DALL·E / GPT-image),一次性生成所有對應的插圖。',
+   promptDocs:'透過 Google Drive/Docs 連接器(需先在此 GPT 啟用連接器且具寫入權限)建立 Google Docs,寫入 Step 4 完整筆記;若未啟用寫入,改為輸出完整 markdown,引導使用者自行貼到新建的 Google Docs。文末留「🎨 視覺化意象統整表」空位。',
+   roleTail:'為使用者建立 Google Docs 文件(經 Drive/Docs 連接器)並用 DALL·E 生成視覺插圖,達成一條龍的結案體驗',
+   flowStep5:'用生圖工具(DALL·E)生成 Step 4 的所有圖片,並(經 Drive/Docs 連接器)建立 Google Docs;連接器不可寫入時改輸出 markdown 讓使用者貼上。',
+   step4End:'我將為您一口氣生成這些圖片(DALL·E)並建立 Google Docs 文件',
+   step5p3:'在回覆中提供 Google Docs 連結與所有 AI 圖片,並說明:\n   > 「🎉 文件與圖片皆已備妥!\n   > 受限於權限我無法直接把圖片塞進文件,請打開上方 Google Docs,把圖片複製貼到文末統整表,即完成你的專屬圖文筆記!」',
+   imgStep:'用 <b>Codex / GPT</b> 的生圖工具(DALL·E)在底圖上疊手寫字,輸出 pNN.png',
+   imgClause:'最後用生圖工具(DALL·E)依提示在底圖上疊上繁體中文手寫標記,輸出彩色手寫筆記圖 pNN.png。'
+ },
+ claude:{
+   label:'Claude', assistant:'Project', assistantFull:'Claude 的 Project',
+   sysName:'專案自訂指令', createLabel:'建立 Project', createUrl:'https://claude.ai/projects',
+   oneshot:'Artifacts', oneshotUrl:'https://claude.ai/new', oneshotSteps:'(Artifacts 無法用網址直達)開新對話 → 直接請它「做一個小工具」,右側會自動開出 Artifact 視窗;若沒出現,到設定→功能開啟 Artifacts。',
+   planTerm:'plan mode 的精神',
+   ide:'Claude Code', ideAlt:'或 Claude Desktop / IDE 擴充',
+   promptImg:'Step 1–4 全部照常執行(含 Step 4 為每個立場類比產出的【🎨 影像生成指令】)。Claude 目前不支援生圖,故 Step 5 唯一差異:不呼叫生圖工具,改為把 Step 4 的每一則影像生成指令各自放進獨立程式碼區塊,讓使用者複製到外部生圖工具(Nano Banana / Imagen)產圖。',
+   promptDocs:'透過 Google Drive/Docs 連接器(Claude Desktop/連接器需具寫入權限)建立 Google Docs,寫入 Step 4 完整筆記;若連接器僅能讀取,改為輸出完整 markdown,引導使用者貼到新建的 Google Docs。文末留「🎨 視覺化意象統整表」空位。',
+   roleTail:'為使用者建立 Google Docs 文件,並為每張插圖輸出可複製的生圖 Prompt(Claude 不直接生圖),達成一條龍的結案體驗',
+   flowStep5:'不直接生圖:把 Step 4 的每則影像生成指令放進可複製區塊,供使用者到外部工具產圖;並(經 Drive/Docs 連接器)建立 Google Docs,不可寫入時改輸出 markdown。',
+   step4End:'我會把每張插圖的生圖 Prompt 整理成可複製區塊,並建立 Google Docs 文件(Claude 不直接生圖)',
+   step5p3:'在回覆中提供 Google Docs 連結,以及每張插圖的可複製生圖 Prompt,並說明:\n   > 「🎉 文件已備妥!Claude 不直接生圖 —— 請把上面每段生圖 Prompt 複製到外部生圖工具(Nano Banana / Imagen)產圖,再把圖片貼進 Google Docs 文末統整表,即完成你的專屬圖文筆記!」',
+   imgStep:'Claude 不生圖:把逐頁提示複製到外部生圖工具(Nano Banana / Imagen)在底圖上疊字,輸出 pNN.png',
+   imgClause:'最後把每頁提示複製到外部生圖工具(Nano Banana / Imagen)在底圖上疊繁中手寫標記,輸出 pNN.png(Claude 不生圖)。'
+ }
+};
+let cur=(localStorage.getItem('gsn-eco')||'gemini');
+if(!ECO[cur])cur='gemini';
 const progline=document.getElementById('progline');
 const curEl=document.getElementById('cur');
 const audio=document.getElementById('lt-audio');
@@ -758,6 +878,7 @@ function go(n){
   slides[idx].classList.add('active');
   progline.style.width=((idx+1)/N*100)+'%';
   document.body.classList.toggle('dark-mode',slides[idx].classList.contains('dark'));
+  document.body.classList.toggle('eco-on',slides[idx].hasAttribute('data-eco-slide'));
   curEl.textContent=String(idx+1).padStart(2,'0');
   document.getElementById('prev').disabled=idx===0;
   document.getElementById('next').disabled=idx===N-1;
@@ -878,24 +999,31 @@ const genText=document.getElementById('genText');
 const genCopy=document.getElementById('genCopy');
 const picked=new Set();
 function buildPrompt(){
+  const slot=document.getElementById('gemWeightSlot');
+  const asst=(ECO[cur]&&ECO[cur].assistant)||'GEM';
   const chosen=INSIGHTS.filter(d=>picked.has(d.n));
   if(!chosen.length){
-    genText.innerHTML='<span class="ph">← 先從上方點選你最重視的功能,我會把它們(連同技巧)寫成一段給 AI 的指令。</span>';
-    genCopy.disabled=true;return;
+    genText.innerHTML='<span class="ph">← 先從上方點選你最重視的功能,我會把它們(連同技巧)寫成一段給 AI 的指令,並自動帶入 8/12 的 Prompt。</span>';
+    genCopy.disabled=true;
+    if(slot)slot.textContent='【個人化權重】(尚未貼上 —— 預設所有功能平均處理)';
+    return;
   }
   const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const head="【個人化權重】(學員挑選 "+chosen.length+" 項;處理逐字稿時請在對應步驟特別加重,並套用其技巧):";
-  const tail="(把這整段貼回 8/12 GEM Prompt 的「# 個人化權重」虛線區塊;之後每次處理逐字稿都會自動套用。)";
-  let plain=head+"\n",html=esc(head)+"\n";
+  const tail="(以上已自動帶入 8/12 "+asst+" Prompt 的「# 個人化權重」區塊;也可按『複製』貼到別處。之後每次處理逐字稿都會自動套用。)";
+  let itemsPlain="",html=esc(head)+"\n";
   chosen.forEach((d,i)=>{
-    plain+="\n"+(i+1)+".〔"+d.short+"〕"+d.dir;
+    itemsPlain+=(i>0?"\n":"")+(i+1)+".〔"+d.short+"〕"+d.dir;
     html+="\n"+(i+1)+".<b>〔"+esc(d.short)+"〕</b>"+esc(d.dir);
-    if(d.tech){plain+="\n   技巧:"+d.tech;html+='\n   <span class="gk">技巧:'+esc(d.tech)+'</span>';}
+    if(d.tech){itemsPlain+="\n   技巧:"+d.tech;html+='\n   <span class="gk">技巧:'+esc(d.tech)+'</span>';}
   });
-  plain+="\n\n"+tail;html+='\n\n<span class="gk">'+esc(tail)+'</span>';
+  const weightBlock=head+"\n"+itemsPlain;          // 帶入 8/12 用(不含 tail 說明)
+  const plain=weightBlock+"\n\n"+tail;             // 複製到別處用
+  html+='\n\n<span class="gk">'+esc(tail)+'</span>';
   genText.innerHTML=html;
   genText._plain=plain;
   genCopy.disabled=false;
+  if(slot)slot.textContent=weightBlock;            // ← 直接寫進 8/12 系統 prompt 的權重槽
 }
 INSIGHTS.forEach(d=>{
   const row=document.createElement('div');
@@ -948,12 +1076,20 @@ const sRailBtns=[...sRail.children];
 function sGo(i){
   sIdx=Math.max(0,Math.min(STEPS.length-1,i));
   const s=STEPS[sIdx];
+  const e=ECO[cur]||ECO.gemini;
+  let body=s.body;
+  if(sIdx===0)body=body.replace('複製這句貼給 AI,看它 one-shot','複製這句貼給 AI(例如 '+e.oneshot+'),看它 one-shot');
+  if(sIdx===3)body=body.replace('plan mode 的精神',e.planTerm);
   sRailBtns.forEach((b,k)=>b.classList.toggle('on',k===sIdx));
-  let html='<div class="sno">第 '+(sIdx+1)+' 拍 / 共 '+STEPS.length+'</div><h3>'+s.tag+'</h3><p>'+s.body+'</p>';
+  let html='<div class="sno">第 '+(sIdx+1)+' 拍 / 共 '+STEPS.length+'</div><h3>'+s.tag+'</h3><p>'+body+'</p>';
   if(s.prompt){
     html+='<div class="spbox"><div class="spbar"><span>↗ 複製這段「'+(sIdx===0?'許願':'拆解')+'」prompt</span>'
       +'<button class="spcopy" data-p="'+sIdx+'">複製</button></div>'
       +'<div class="sptext">'+s.prompt+'</div></div>';
+  }
+  if(sIdx===0){
+    html+='<div class="onelink">↗ 到「'+e.oneshot+'」的開發窗:<a href="'+e.oneshotUrl+'" target="_blank" rel="noopener">'+e.oneshot+'</a>'
+      +(e.oneshotSteps?'<span class="onesteps">'+e.oneshotSteps+'</span>':'')+'</div>';
   }
   sBody.innerHTML=html;
   const cb=sBody.querySelector('.spcopy');
@@ -1023,6 +1159,41 @@ function copyPrompt(){
     setTimeout(()=>{btn.textContent='複製 Prompt';},1800);
   });
 }
+
+/* ---------------- ecosystem switcher wiring ---------------- */
+const ecoBtns=[...document.querySelectorAll('#ecoSwitch button')];
+function renderEco(k){
+  if(!ECO[k])k='gemini';
+  cur=k; try{localStorage.setItem('gsn-eco',k);}catch(e){}
+  const e=ECO[k];
+  ecoBtns.forEach(b=>b.classList.toggle('on',b.dataset.k===k));
+  const setTx=(sel,v)=>document.querySelectorAll(sel).forEach(n=>{n.textContent=v;});
+  setTx('.eco-label',e.label);
+  setTx('.eco-assistant',e.assistant);
+  setTx('.eco-assistantfull',e.assistantFull);
+  setTx('.eco-sysname',e.sysName);
+  setTx('.eco-ide',e.ide);
+  setTx('.eco-idealt',e.ideAlt);
+  setTx('.eco-imgclause',e.imgClause);
+  const cb=document.getElementById('ecoCreateBtn'); if(cb){cb.textContent=e.createLabel;cb.href=e.createUrl;}
+  const gi=document.getElementById('ecoPromptImg'); if(gi)gi.textContent=e.promptImg;
+  const gd=document.getElementById('ecoPromptDocs'); if(gd)gd.textContent=e.promptDocs;
+  const rt=document.getElementById('ecoRoleTail'); if(rt)rt.textContent=e.roleTail;
+  const f5=document.getElementById('ecoFlowStep5'); if(f5)f5.textContent=e.flowStep5;
+  const s4=document.getElementById('ecoStep4End'); if(s4)s4.textContent=e.step4End;
+  const s5=document.getElementById('ecoStep5p3'); if(s5)s5.textContent=e.step5p3;
+  const is=document.getElementById('ecoImgStep'); if(is)is.innerHTML=e.imgStep;
+  document.querySelectorAll('.eco-only').forEach(n=>{n.style.display=(n.dataset.eco===k)?'block':'none';});
+  if(typeof sGo==='function')sGo(sIdx);
+  if(typeof buildPrompt==='function')buildPrompt();
+}
+ecoBtns.forEach(b=>b.onclick=()=>renderEco(b.dataset.k));
+/* wire copy buttons inside the Claude-only replacement blocks */
+document.querySelectorAll('.eco-only .spbox').forEach(box=>{
+  const b=box.querySelector('.spcopy'),t=box.querySelector('.sptext');
+  if(b&&t)b.onclick=()=>copyText(t.textContent,b);
+});
+renderEco(cur);
 </script>
 </body>
 </html>
